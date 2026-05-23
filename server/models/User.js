@@ -32,7 +32,7 @@ const addressSchema = new mongoose.Schema(
     },
     landmark: String,
   },
-  { _id: true }
+  { _id: true },
 );
 
 const userSchema = new mongoose.Schema(
@@ -71,7 +71,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const User = mongoose.model("User", userSchema);
