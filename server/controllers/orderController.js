@@ -184,3 +184,74 @@ export const getOrderById = async (req, res) => {
     });
   }
 };
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate("user", "name email")
+      .sort({
+        createdAt: -1,
+      });
+
+    res.json(orders);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const updateOrderStatus = async (req, res) => {
+  try {
+    const { orderStatus } = req.body;
+
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Order not found",
+      });
+    }
+
+    order.orderStatus = orderStatus;
+
+    await order.save();
+
+    res.json({
+      message: "Order status updated",
+      order,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const getDashboardStats = async (req, res) => {
+  try {
+    const totalOrders = await Order.countDocuments();
+    const totalProducts =
+      await (await import("../models/Product.js")).default.countDocuments();
+
+    const totalUsers =
+      await (await import("../models/User.js")).default.countDocuments();
+
+    const orders = await Order.find();
+
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + order.totalPrice,
+      0
+    );
+
+    res.json({
+      totalOrders,
+      totalProducts,
+      totalUsers,
+      totalRevenue,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
