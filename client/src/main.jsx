@@ -15,7 +15,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <BrowserRouter>
           <App />
-          <ToastContainer />
+          <ToastContainer position="bottom-right" />
         </BrowserRouter>
       </ThemeProvider>
     </Provider>

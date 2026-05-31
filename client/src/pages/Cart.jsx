@@ -286,17 +286,17 @@ function Cart() {
         <div className="bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 rounded-3xl p-6 text-left my-8 shadow-md relative overflow-hidden space-y-4">
           <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-500" />
           
-          <div className="flex justify-between border-b border-gray-100 dark:border-gray-850 pb-3 text-xs">
+          <div className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-3 text-xs">
             <span className="text-gray-400 dark:text-gray-500 font-bold uppercase">Order Reference</span>
-            <span className="font-bold text-gray-800 dark:text-gray-250 truncate max-w-[150px]">{placedOrder._id}</span>
+            <span className="font-bold text-gray-800 dark:text-gray-200 truncate max-w-[150px]">{placedOrder._id}</span>
           </div>
 
-          <div className="flex justify-between border-b border-gray-100 dark:border-gray-850 pb-3 text-xs">
+          <div className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-3 text-xs">
             <span className="text-gray-400 dark:text-gray-500 font-bold uppercase">Razorpay Payment ID</span>
-            <span className="font-bold text-gray-850 dark:text-gray-200 truncate max-w-[150px]">{placedOrder.razorpayPaymentId}</span>
+            <span className="font-bold text-gray-800 dark:text-gray-200 truncate max-w-[150px]">{placedOrder.razorpayPaymentId}</span>
           </div>
 
-          <div className="flex justify-between border-b border-gray-100 dark:border-gray-850 pb-3 text-xs">
+          <div className="flex justify-between border-b border-gray-100 dark:border-gray-800 pb-3 text-xs">
             <span className="text-gray-400 dark:text-gray-500 font-bold uppercase">Paid Amount</span>
             <span className="font-extrabold text-gray-900 dark:text-white text-sm">₹{placedOrder.totalPrice?.toLocaleString()} INR</span>
           </div>
@@ -332,7 +332,7 @@ function Cart() {
           <div className="bg-white dark:bg-gray-900 p-8 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-2xl flex flex-col items-center max-w-sm text-center">
             <Loader2 className="animate-spin text-pink-600 mb-4" size={40} />
             <h3 className="font-serif font-bold text-lg text-gray-900 dark:text-white mb-2">Processing Checkout</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-450 leading-relaxed">{loadingText || "Please wait..."}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{loadingText || "Please wait..."}</p>
           </div>
         </div>
       )}
@@ -386,7 +386,7 @@ function Cart() {
                       className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 p-5 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center gap-6"
                     >
                       {/* Image */}
-                      <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-950 shrink-0 border border-gray-100 dark:border-gray-850">
+                      <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-950 shrink-0 border border-gray-100 dark:border-gray-800">
                         <img 
                           src={item.images?.[0]?.url || "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=600&q=80"} 
                           alt={item.title} 
@@ -420,7 +420,7 @@ function Cart() {
                           >
                             <Minus size={12} />
                           </button>
-                          <span className="text-xs font-bold text-gray-800 dark:text-gray-250">{item.qty}</span>
+                          <span className="text-xs font-bold text-gray-800 dark:text-gray-200">{item.qty}</span>
                           <button 
                             onClick={() => handleQtyChange(item, item.qty + 1)}
                             className="text-gray-400 hover:text-pink-600 transition-colors"
@@ -471,7 +471,7 @@ function Cart() {
             ) : (
               // Step 2: Shipping Address Form
               <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] p-6 sm:p-8 shadow-sm space-y-6">
-                <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 pb-4">
+                <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
                   <h2 className="text-xl font-serif font-extrabold text-gray-900 dark:text-white flex items-center gap-2">
                     <Truck size={22} className="text-pink-650" />
                     Delivery Shipping Address
@@ -486,7 +486,7 @@ function Cart() {
 
                 {/* Saved Address Quick Selector */}
                 {savedAddresses.length > 0 && (
-                  <div className="space-y-3 pb-5 border-b border-gray-100 dark:border-gray-850/80 mb-5">
+                  <div className="space-y-3 pb-5 border-b border-gray-100 dark:border-gray-800/80 mb-5">
                     <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                       <MapPin size={12} className="text-pink-650" />
                       Select from Saved Addresses
@@ -506,8 +506,8 @@ function Cart() {
                             }`}
                           >
                             <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{addr.fullName}</p>
-                            <p className="text-[10px] text-gray-500 dark:text-gray-450 mt-1 truncate">{addr.house}, {addr.area}</p>
-                            <p className="text-[10px] text-gray-500 dark:text-gray-450 truncate">{addr.city}, {addr.state} - {addr.pincode}</p>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 truncate">{addr.house}, {addr.area}</p>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-400 truncate">{addr.city}, {addr.state} - {addr.pincode}</p>
                           </button>
                         );
                       })}
@@ -617,7 +617,7 @@ function Cart() {
                       value={shippingAddress.landmark}
                       onChange={handleAddressChange}
                       placeholder="e.g. Near Metro Station" 
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                     />
                   </div>
 
@@ -654,21 +654,21 @@ function Cart() {
                   <div className="flex items-center gap-1.5 text-pink-600 dark:text-pink-400 font-bold uppercase tracking-wider text-[10px]">
                     <Sparkles size={12} /> Sandbox Mode Test Credentials
                   </div>
-                  <p className="text-gray-500 dark:text-gray-405 leading-relaxed">
+                  <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
                     Use these mock credentials within the Razorpay checkout window to simulate a successful payment:
                   </p>
                   <ul className="space-y-2 text-gray-700 dark:text-gray-300">
-                    <li className="flex justify-between border-b border-gray-100 dark:border-gray-850/60 pb-1">
+                    <li className="flex justify-between border-b border-gray-100 dark:border-gray-800/60 pb-1">
                       <span>💳 Test Card Number:</span>
                       <span className="font-mono font-bold">4111 1111 1111 1111</span>
                     </li>
-                    <li className="flex justify-between border-b border-gray-100 dark:border-gray-850/60 pb-1">
+                    <li className="flex justify-between border-b border-gray-100 dark:border-gray-800/60 pb-1">
                       <span>📅 Expiry / CVV:</span>
                       <span className="font-mono">Any future date (e.g. 12/30) / <strong className="font-bold">123</strong></span>
                     </li>
                     <li className="flex justify-between">
                       <span>🏦 Netbanking simulation:</span>
-                      <span>Select any bank and click <strong className="text-emerald-600 dark:text-emerald-450 font-bold">Success</strong></span>
+                      <span>Select any bank and click <strong className="text-emerald-600 dark:text-emerald-400 font-bold">Success</strong></span>
                     </li>
                   </ul>
                 </div>

@@ -212,7 +212,7 @@ function Home() {
             </div>
 
             {/* Micro Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-gray-200/60 dark:border-gray-850/60 max-w-md mx-auto lg:mx-0">
+            <div className="grid grid-cols-3 gap-6 pt-6 border-t border-gray-200/60 dark:border-gray-800/60 max-w-md mx-auto lg:mx-0">
               <div>
                 <p className="text-2xl sm:text-3xl font-extrabold text-pink-600">500+</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Custom Pieces Poured</p>
@@ -250,7 +250,7 @@ function Home() {
             </div>
             
             {/* Small decorative frame */}
-            <div className="absolute -bottom-6 -left-6 hidden md:block w-36 h-36 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-850 shadow-xl rotate-6 transform hover:rotate-0 hover:scale-110 transition-all duration-300">
+            <div className="absolute -bottom-6 -left-6 hidden md:block w-36 h-36 rounded-2xl overflow-hidden border-4 border-white dark:border-gray-800 shadow-xl rotate-6 transform hover:rotate-0 hover:scale-110 transition-all duration-300">
               <img 
                 src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=300&q=80" 
                 alt="Agate Coaster Detail" 
@@ -277,7 +277,7 @@ function Home() {
             <Link 
               key={idx}
               to={cat.link}
-              className="group relative h-[360px] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-end p-5 bg-gray-900 border border-gray-100 dark:border-gray-805"
+              className="group relative h-[360px] rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-end p-5 bg-gray-900 border border-gray-100 dark:border-gray-800"
             >
               {/* Image backdrop */}
               <img 
@@ -473,8 +473,7 @@ function Home() {
                   <h3 className="font-serif font-bold text-xl text-gray-900 dark:text-white mb-6">
                     Submit a Preservation Inquiry
                   </h3>
-                  
-                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                                  <form onSubmit={handleInquirySubmit} className="space-y-4">
                     <div className="grid sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Your Name</label>
@@ -485,7 +484,7 @@ function Home() {
                           value={formData.name}
                           onChange={handleInquiryChange}
                           placeholder="e.g. Aditi Sharma" 
-                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -497,7 +496,7 @@ function Home() {
                           value={formData.email}
                           onChange={handleInquiryChange}
                           placeholder="e.g. aditi@gmail.com" 
-                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                         />
                       </div>
                     </div>
@@ -512,7 +511,7 @@ function Home() {
                           value={formData.phone}
                           onChange={handleInquiryChange}
                           placeholder="e.g. +91 9876543210" 
-                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                         />
                       </div>
                       <div className="space-y-1.5">
@@ -521,7 +520,7 @@ function Home() {
                           name="eventType"
                           value={formData.eventType}
                           onChange={handleInquiryChange}
-                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-805 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                         >
                           <option value="Wedding">Wedding Varmala / Bouquet</option>
                           <option value="Engagement">Engagement Flowers</option>
@@ -540,7 +539,7 @@ function Home() {
                         required
                         value={formData.eventDate}
                         onChange={handleInquiryChange}
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-805 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                       />
                     </div>
 
@@ -552,7 +551,7 @@ function Home() {
                         value={formData.details}
                         onChange={handleInquiryChange}
                         placeholder="Describe what flowers you have, shapes you are interested in (hexagon, cube, bookends), or custom color themes..." 
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                       ></textarea>
                     </div>
 

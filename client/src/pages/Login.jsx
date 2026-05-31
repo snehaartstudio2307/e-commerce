@@ -85,7 +85,7 @@ function Login() {
             <h2 className="text-3xl font-serif font-extrabold text-gray-900 dark:text-white">
               {isLogin ? "Welcome Back" : "Create Account"}
             </h2>
-            <p className="text-xs text-gray-500 dark:text-gray-405 mt-1 leading-relaxed">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
               {isLogin 
                 ? "Sign in to access your order logs, cart pre-fills, and saved wishlists" 
                 : "Sign up as a studio collector to log flower preservation projects"}
@@ -105,7 +105,7 @@ function Login() {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="e.g. Aditi Sharma" 
-                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                 />
               </div>
             )}
@@ -120,7 +120,7 @@ function Login() {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="e.g. aditi@gmail.com" 
-                className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
               />
             </div>
 
@@ -134,7 +134,7 @@ function Login() {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Min. 6 characters" 
-                className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
               />
             </div>
 

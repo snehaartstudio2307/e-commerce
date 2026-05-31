@@ -261,7 +261,7 @@ function Profile() {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === "orders"
                   ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/60"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60"
               }`}
             >
               <ShoppingBag size={16} />
@@ -273,7 +273,7 @@ function Profile() {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === "addresses"
                   ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/60"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60"
               }`}
             >
               <MapPin size={16} />
@@ -285,7 +285,7 @@ function Profile() {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all ${
                 activeTab === "account"
                   ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/60"
+                  : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/60"
               }`}
             >
               <User size={16} />
@@ -339,9 +339,9 @@ function Profile() {
                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-500 to-rose-500" />
                         
                         {/* Order info row */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-50 dark:border-gray-850/50 pb-4 text-xs font-semibold">
+                        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-50 dark:border-gray-800/50 pb-4 text-xs font-semibold">
                           <div>
-                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase">Order Date</p>
+                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase">Order Date</p>
                             <p className="text-gray-800 dark:text-gray-200 mt-0.5">
                               {new Date(order.createdAt).toLocaleDateString("en-IN", {
                                 year: "numeric",
@@ -351,11 +351,11 @@ function Profile() {
                             </p>
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase">Reference</p>
+                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase">Reference</p>
                             <p className="font-mono text-gray-800 dark:text-gray-200 mt-0.5">{order._id}</p>
                           </div>
                           <div>
-                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase">Payment Amount</p>
+                            <p className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase">Payment Amount</p>
                             <p className="font-extrabold text-gray-900 dark:text-white mt-0.5">₹{order.totalPrice?.toLocaleString()}</p>
                           </div>
                           <div>
@@ -364,7 +364,7 @@ function Profile() {
                                 setSelectedOrder(order);
                                 setOrderModalOpen(true);
                               }}
-                              className="inline-flex items-center gap-1 text-[11px] font-bold text-pink-650 dark:text-pink-500 hover:underline border border-pink-100 dark:border-pink-900/30 bg-pink-50/30 dark:bg-pink-950/10 px-3 py-1.5 rounded-xl transition-all"
+                              className="inline-flex items-center gap-1 text-[11px] font-bold text-pink-655 dark:text-pink-500 hover:underline border border-pink-100/30 dark:border-pink-900/30 bg-pink-50/30 dark:bg-pink-950/10 px-3 py-1.5 rounded-xl transition-all"
                             >
                               <Eye size={12} />
                               View Invoice
@@ -374,7 +374,7 @@ function Profile() {
 
                         {/* Order Stepper (LIVE TRACKING TIMELINE) */}
                         <div className="py-4">
-                          <p className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase mb-6">Live Fulfillment Tracking</p>
+                          <p className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase mb-6">Live Fulfillment Tracking</p>
                           
                           {isCancelled ? (
                             <div className="bg-red-50/50 dark:bg-red-950/10 border border-red-100 dark:border-red-900/35 rounded-2xl p-4 flex items-center gap-3 text-red-500 text-xs font-semibold">
@@ -482,7 +482,7 @@ function Profile() {
                         <p className="text-gray-900 dark:text-white pt-1">Phone: {addr.phone}</p>
                       </div>
 
-                      <div className="flex items-center gap-2 mt-5 pt-4 border-t border-gray-50 dark:border-gray-850/50">
+                      <div className="flex items-center gap-2 mt-5 pt-4 border-t border-gray-50 dark:border-gray-800/50">
                         <button
                           onClick={() => handleOpenEditModal(addr)}
                           className="flex-grow flex items-center justify-center gap-1 py-2 text-xs font-semibold text-gray-500 hover:text-pink-600 dark:text-gray-400 dark:hover:text-pink-500 border border-gray-200 dark:border-gray-800 rounded-xl hover:bg-pink-50/30 dark:hover:bg-pink-950/10 transition-all"
@@ -513,9 +513,9 @@ function Profile() {
               <form onSubmit={handleProfileSubmit} className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6 max-w-2xl">
                 
                 {/* Profile Picture Uploader */}
-                <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-55 dark:border-gray-850/50">
+                <div className="flex flex-col sm:flex-row items-center gap-6 pb-6 border-b border-gray-100 dark:border-gray-800/50">
                   <div className="relative group shrink-0">
-                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-pink-200 dark:border-pink-900/60 shadow-md bg-gray-50 dark:bg-gray-955 flex items-center justify-center">
+                    <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-pink-200 dark:border-pink-900/60 shadow-md bg-gray-50 dark:bg-gray-950 flex items-center justify-center">
                       {avatarPreview ? (
                         <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
                       ) : (
@@ -527,11 +527,11 @@ function Profile() {
                   </div>
                   
                   <div className="text-center sm:text-left space-y-2">
-                    <h3 className="text-sm font-bold text-gray-905 dark:text-white">Profile Photo</h3>
+                    <h3 className="text-sm font-bold text-gray-900 dark:text-white">Profile Photo</h3>
                     <p className="text-[10px] text-gray-500 dark:text-gray-400 max-w-xs leading-normal">
                       Update your profile picture. Only JPG, JPEG, and PNG formats are accepted (Max 5MB).
                     </p>
-                    <label className="inline-flex items-center gap-1.5 cursor-pointer bg-gray-50 dark:bg-gray-950 hover:bg-gray-105 dark:hover:bg-gray-850/85 text-gray-700 dark:text-gray-300 font-bold text-[10px] uppercase tracking-wider px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-xl transition-all">
+                    <label className="inline-flex items-center gap-1.5 cursor-pointer bg-gray-50 dark:bg-gray-950 hover:bg-gray-100 dark:hover:bg-gray-800/85 text-gray-700 dark:text-gray-300 font-bold text-[10px] uppercase tracking-wider px-4 py-2 border border-gray-200 dark:border-gray-800 rounded-xl transition-all">
                       <Camera size={12} className="text-pink-655" />
                       {profileAvatar ? "Change Selected" : "Upload Picture"}
                       <input 
@@ -561,35 +561,35 @@ function Profile() {
                 <div className="grid sm:grid-cols-2 gap-5 text-xs">
                   {/* Name */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider">Collector Name</label>
+                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider">Collector Name</label>
                     <div className="relative">
                       <input
                         type="text"
                         required
                         value={profileForm.name}
                         onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
                       />
                     </div>
                   </div>
 
                   {/* Email */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider">Registered Email</label>
+                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider">Registered Email</label>
                     <div className="relative">
                       <input
                         type="email"
                         required
                         value={profileForm.email}
                         onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
                       />
                     </div>
                   </div>
 
                   {/* Password */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-555 uppercase tracking-wider">New Password (Optional)</label>
+                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider">New Password (Optional)</label>
                     <div className="relative">
                       <input
                         type="password"
@@ -603,7 +603,7 @@ function Profile() {
 
                   {/* Confirm Password */}
                   <div className="space-y-1.5">
-                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-555 uppercase tracking-wider">Confirm New Password</label>
+                    <label className="text-[10px] font-bold text-gray-400 dark:text-gray-400 uppercase tracking-wider">Confirm New Password</label>
                     <div className="relative">
                       <input
                         type="password"
@@ -617,8 +617,8 @@ function Profile() {
                 </div>
 
                 {/* Submit button & membership indicator */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-gray-50 dark:border-gray-850/50">
-                  <div className="flex items-center gap-1.5 text-xs text-gray-450 dark:text-gray-500 font-bold uppercase tracking-widest">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-4 border-t border-gray-50 dark:border-gray-800/50">
+                  <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500 font-bold uppercase tracking-widest">
                     <ShieldCheck size={16} className="text-emerald-500 shrink-0" />
                     <span>
                       {userInfo.isAdmin ? "Studio Admin Account" : "Verified Studio Member"}
@@ -658,13 +658,13 @@ function Profile() {
           <div className="relative w-full max-w-lg bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] shadow-2xl z-10 overflow-hidden">
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500" />
             
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 p-6">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 p-6">
               <h3 className="text-lg font-serif font-extrabold text-gray-900 dark:text-white">
                 {editingAddressId ? "Modify Saved Address" : "Save New Address"}
               </h3>
               <button
                 onClick={() => setAddressModalOpen(false)}
-                className="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-250 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                className="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
               >
                 <X size={18} />
               </button>
@@ -673,7 +673,7 @@ function Profile() {
             <form onSubmit={handleAddressSubmit} className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">Full Name</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Full Name</label>
                   <input
                     type="text"
                     name="fullName"
@@ -681,11 +681,11 @@ function Profile() {
                     value={addressForm.fullName}
                     onChange={handleAddressInputChange}
                     placeholder="Aditi Sharma"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-850 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">Phone Number</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Phone Number</label>
                   <input
                     type="tel"
                     name="phone"
@@ -693,14 +693,14 @@ function Profile() {
                     value={addressForm.phone}
                     onChange={handleAddressInputChange}
                     placeholder="9876543210"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-850 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">House / Flat No.</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">House / Flat No.</label>
                   <input
                     type="text"
                     name="house"
@@ -708,11 +708,11 @@ function Profile() {
                     value={addressForm.house}
                     onChange={handleAddressInputChange}
                     placeholder="Flat 302, Royal Apt"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">Area / Street</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Area / Street</label>
                   <input
                     type="text"
                     name="area"
@@ -720,14 +720,14 @@ function Profile() {
                     value={addressForm.area}
                     onChange={handleAddressInputChange}
                     placeholder="Indiranagar 12th Main"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-3 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">City</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">City</label>
                   <input
                     type="text"
                     name="city"
@@ -735,11 +735,11 @@ function Profile() {
                     value={addressForm.city}
                     onChange={handleAddressInputChange}
                     placeholder="Bengaluru"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">State</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">State</label>
                   <input
                     type="text"
                     name="state"
@@ -747,11 +747,11 @@ function Profile() {
                     value={addressForm.state}
                     onChange={handleAddressInputChange}
                     placeholder="Karnataka"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-905 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">Pin Code</label>
+                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Pin Code</label>
                   <input
                     type="text"
                     name="pincode"
@@ -759,20 +759,20 @@ function Profile() {
                     value={addressForm.pincode}
                     onChange={handleAddressInputChange}
                     placeholder="560038"
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                   />
                 </div>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[11px] font-bold text-gray-400 dark:text-gray-550 uppercase">Landmark (Optional)</label>
+                <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Landmark (Optional)</label>
                 <input
                   type="text"
                   name="landmark"
                   value={addressForm.landmark}
                   onChange={handleAddressInputChange}
                   placeholder="Near Metro Station"
-                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-205 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                  className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                 />
               </div>
 
@@ -796,14 +796,14 @@ function Profile() {
           <div className="relative w-full max-w-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] shadow-2xl z-10 overflow-hidden max-h-[90vh] flex flex-col">
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500" />
             
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 p-6">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 p-6">
               <div>
                 <h3 className="text-lg font-serif font-extrabold text-gray-900 dark:text-white">Order Invoice Details</h3>
-                <p className="text-[10px] font-mono text-gray-400 dark:text-gray-550 mt-0.5">Reference: {selectedOrder._id}</p>
+                <p className="text-[10px] font-mono text-gray-400 dark:text-gray-500 mt-0.5">Reference: {selectedOrder._id}</p>
               </div>
               <button 
                 onClick={() => setOrderModalOpen(false)}
-                className="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-250 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                className="p-1.5 rounded-full text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
               >
                 <X size={18} />
               </button>
@@ -815,7 +815,7 @@ function Profile() {
               <div className="bg-pink-50/20 dark:bg-pink-950/10 border border-pink-100/40 dark:border-pink-900/30 rounded-2xl p-4 flex items-center justify-between text-xs font-semibold">
                 <div className="flex items-center gap-2">
                   <Truck className="text-pink-600" size={16} />
-                  <span className="text-gray-550">Status:</span>
+                  <span className="text-gray-500">Status:</span>
                   <span className="text-pink-650 dark:text-pink-500 font-bold uppercase tracking-wider text-[10px] bg-pink-50 dark:bg-pink-950/40 px-2 py-0.5 rounded-md border border-pink-100/30">
                     {selectedOrder.orderStatus}
                   </span>
@@ -826,7 +826,7 @@ function Profile() {
               </div>
 
               {/* Grid block info */}
-              <div className="grid sm:grid-cols-2 gap-6 bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-850/60 rounded-2xl text-xs space-y-4 sm:space-y-0">
+              <div className="grid sm:grid-cols-2 gap-6 bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-800/60 rounded-2xl text-xs space-y-4 sm:space-y-0">
                 <div className="space-y-2">
                   <div className="flex items-center gap-1.5 text-gray-400 font-bold uppercase tracking-wider text-[9px]">
                     <Calendar size={12} /> Date Ordered
@@ -846,7 +846,7 @@ function Profile() {
                     <CreditCard size={12} /> Payment Particulars
                   </div>
                   <p className="font-bold text-gray-800 dark:text-gray-200">Method: {selectedOrder.paymentMethod || "Razorpay"}</p>
-                  <p className="text-gray-550 font-normal mt-0.5">Status: <strong className="font-semibold text-emerald-600">{selectedOrder.paymentStatus}</strong></p>
+                  <p className="text-gray-500 font-normal mt-0.5">Status: <strong className="font-semibold text-emerald-600">{selectedOrder.paymentStatus}</strong></p>
                   {selectedOrder.razorpayPaymentId && (
                     <p className="text-[10px] font-mono text-gray-400 font-normal mt-0.5">Txn ID: {selectedOrder.razorpayPaymentId}</p>
                   )}
@@ -856,7 +856,7 @@ function Profile() {
               {/* Shipping address details */}
               <div className="text-xs space-y-2">
                 <span className="text-gray-400 font-bold uppercase tracking-wider text-[9px] block">Shipping Destination</span>
-                <div className="bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-850/60 rounded-2xl leading-relaxed text-gray-700 dark:text-gray-300 font-normal">
+                <div className="bg-gray-50/50 dark:bg-gray-950/30 border border-gray-100 dark:border-gray-800/60 rounded-2xl leading-relaxed text-gray-700 dark:text-gray-300 font-normal">
                   <p className="font-bold text-gray-900 dark:text-white">{selectedOrder.shippingAddress?.fullName}</p>
                   <p>{selectedOrder.shippingAddress?.house}, {selectedOrder.shippingAddress?.area}</p>
                   <p>{selectedOrder.shippingAddress?.city}, {selectedOrder.shippingAddress?.state} - <strong className="font-bold">{selectedOrder.shippingAddress?.pincode}</strong></p>
@@ -872,15 +872,15 @@ function Profile() {
                   {selectedOrder.items?.map((item, index) => (
                     <div 
                       key={index}
-                      className="flex items-center gap-4 p-3 border border-gray-100 dark:border-gray-850 rounded-xl"
+                      className="flex items-center gap-4 p-3 border border-gray-100 dark:border-gray-800 rounded-xl"
                     >
-                      <div className="w-12 h-12 bg-gray-50 dark:bg-gray-950 rounded-lg overflow-hidden shrink-0 border border-gray-100 dark:border-gray-850">
+                      <div className="w-12 h-12 bg-gray-50 dark:bg-gray-950 rounded-lg overflow-hidden shrink-0 border border-gray-100 dark:border-gray-800">
                         <img src={item.image} alt="" className="w-full h-full object-cover" />
                       </div>
 
                       <div className="flex-grow text-xs font-semibold">
                         <h4 className="text-gray-900 dark:text-white line-clamp-1">{item.title}</h4>
-                        <p className="text-gray-405 font-normal mt-0.5">₹{item.price?.toLocaleString()} x {item.quantity}</p>
+                        <p className="text-gray-400 font-normal mt-0.5">₹{item.price?.toLocaleString()} x {item.quantity}</p>
                       </div>
 
                       <span className="text-xs font-extrabold text-gray-950 dark:text-white text-right">
@@ -892,7 +892,7 @@ function Profile() {
               </div>
 
               {/* Financial invoice totals */}
-              <div className="border-t border-gray-100 dark:border-gray-850 pt-4 text-xs font-semibold text-gray-600 dark:text-gray-300 space-y-2.5 max-w-xs ml-auto">
+              <div className="border-t border-gray-100 dark:border-gray-800 pt-4 text-xs font-semibold text-gray-600 dark:text-gray-300 space-y-2.5 max-w-xs ml-auto">
                 <div className="flex justify-between font-normal text-gray-400">
                   <span>Cart Subtotal</span>
                   <span>₹{selectedOrder.totalPrice?.toLocaleString()}</span>
@@ -905,7 +905,7 @@ function Profile() {
                   <span>Delivery fee</span>
                   <span className="text-emerald-600 font-bold uppercase text-[9px]">Free Shipping</span>
                 </div>
-                <div className="flex justify-between items-baseline pt-2 border-t border-gray-100 dark:border-gray-850 text-gray-900 dark:text-white">
+                <div className="flex justify-between items-baseline pt-2 border-t border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white">
                   <span className="font-bold text-sm">Total Paid</span>
                   <span className="text-lg font-extrabold">₹{selectedOrder.totalPrice?.toLocaleString()} INR</span>
                 </div>

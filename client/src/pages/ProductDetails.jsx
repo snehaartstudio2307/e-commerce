@@ -212,7 +212,7 @@ function ProductDetails() {
         
         {/* Left Column - Product Images Gallery */}
         <div className="md:col-span-6 space-y-6">
-          <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-850 rounded-[2rem] overflow-hidden aspect-[4/5] relative shadow-sm">
+          <div className="bg-gray-50 dark:bg-gray-900/40 border border-gray-100 dark:border-gray-800 rounded-[2rem] overflow-hidden aspect-[4/5] relative shadow-sm">
             <img 
               src={product.images?.[selectedImage]?.url || "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=600&q=80"} 
               alt={product.title} 
@@ -324,7 +324,7 @@ function ProductDetails() {
                   >
                     <Minus size={16} />
                   </button>
-                  <span className="text-sm font-bold text-gray-800 dark:text-gray-250">{qty}</span>
+                  <span className="text-sm font-bold text-gray-800 dark:text-gray-200">{qty}</span>
                   <button 
                     onClick={() => handleQtyChange(qty + 1)}
                     className="text-gray-400 hover:text-pink-600 transition-colors"
@@ -378,7 +378,7 @@ function ProductDetails() {
             </p>
             
             {userInfo ? (
-              <form onSubmit={handleReviewSubmit} className="space-y-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-850 p-6">
+              <form onSubmit={handleReviewSubmit} className="space-y-4 bg-gray-50 dark:bg-gray-900/50 rounded-2xl border border-gray-100 dark:border-gray-800 p-6">
                 
                 {/* Rating selection */}
                 <div className="space-y-1.5">
@@ -450,7 +450,7 @@ function ProductDetails() {
                           {rev.name?.charAt(0) || "U"}
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-gray-800 dark:text-gray-250">{rev.name}</p>
+                          <p className="text-xs font-bold text-gray-800 dark:text-gray-200">{rev.name}</p>
                           <p className="text-[10px] text-gray-400 dark:text-gray-500 font-medium">
                             {new Date(rev.createdAt).toLocaleDateString("en-IN", {
                               year: "numeric",
@@ -473,7 +473,7 @@ function ProductDetails() {
                       </div>
                     </div>
 
-                    <p className="text-xs text-gray-650 dark:text-gray-300 italic leading-relaxed font-normal">
+                    <p className="text-xs text-gray-600 dark:text-gray-300 italic leading-relaxed font-normal">
                       "{rev.comment}"
                     </p>
                   </div>

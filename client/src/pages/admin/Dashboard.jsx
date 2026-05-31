@@ -334,7 +334,7 @@ function Dashboard() {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
             activeAdminTab === "orders"
               ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/50"
+              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
           }`}
         >
           <Sliders size={14} />
@@ -346,7 +346,7 @@ function Dashboard() {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
             activeAdminTab === "products"
               ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/50"
+              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
           }`}
         >
           <Package size={14} />
@@ -358,7 +358,7 @@ function Dashboard() {
           className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
             activeAdminTab === "homepage"
               ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
-              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-850/50"
+              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
           }`}
         >
           <Sparkles size={14} />
@@ -448,13 +448,13 @@ function Dashboard() {
               </div>
             ) : orders.length === 0 ? (
               <div className="py-16 text-center bg-gray-50 dark:bg-gray-950 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800 m-2">
-                <p className="text-gray-550 dark:text-gray-400 text-xs">No orders found in the database system yet.</p>
+                <p className="text-gray-500 dark:text-gray-400 text-xs">No orders found in the database system yet.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-gray-100 dark:border-gray-850 text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold">
+                    <tr className="border-b border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold">
                       <th className="py-4 px-4">Order Reference</th>
                       <th className="py-4 px-4">Date</th>
                       <th className="py-4 px-4">Collector</th>
@@ -464,7 +464,7 @@ function Dashboard() {
                       <th className="py-4 px-4 text-center">Invoice</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 dark:divide-gray-850/60 text-gray-700 dark:text-gray-300 font-medium">
+                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60 text-gray-700 dark:text-gray-300 font-medium">
                     {orders.map((order) => (
                       <tr key={order._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-950/40 transition-colors">
                         <td className="py-4 px-4 font-mono font-bold text-gray-900 dark:text-white max-w-[120px] truncate">{order._id}</td>
@@ -560,7 +560,7 @@ function Dashboard() {
             </div>
           ) : productsList.length === 0 ? (
             <div className="py-16 text-center bg-gray-50 dark:bg-gray-950 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800 m-2">
-              <p className="text-gray-550 dark:text-gray-400 text-xs mb-4">No products found in the database system yet.</p>
+              <p className="text-gray-500 dark:text-gray-400 text-xs mb-4">No products found in the database system yet.</p>
               <button
                 onClick={handleOpenAddProduct}
                 className="inline-flex items-center gap-1.5 text-xs text-pink-650 dark:text-pink-400 hover:underline font-bold"
@@ -572,7 +572,7 @@ function Dashboard() {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-gray-100 dark:border-gray-850 text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold">
+                  <tr className="border-b border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold">
                     <th className="py-4 px-4">Artwork Image</th>
                     <th className="py-4 px-4">Title & Category</th>
                     <th className="py-4 px-4 text-right">Price</th>
@@ -580,12 +580,12 @@ function Dashboard() {
                     <th className="py-4 px-4 text-center">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-850/60 text-gray-700 dark:text-gray-300 font-medium">
+                <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60 text-gray-700 dark:text-gray-300 font-medium">
                   {productsList.map((prod) => (
                     <tr key={prod._id} className="hover:bg-gray-50/50 dark:hover:bg-gray-950/40 transition-colors">
                       {/* Product Thumbnail */}
                       <td className="py-4 px-4 whitespace-nowrap">
-                        <div className="w-14 h-14 bg-gray-50 dark:bg-gray-950 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-850 shadow-sm">
+                        <div className="w-14 h-14 bg-gray-50 dark:bg-gray-950 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm">
                           <img
                             src={prod.images?.[0]?.url || "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=150&q=80"}
                             alt={prod.title}
@@ -629,14 +629,14 @@ function Dashboard() {
                         <div className="flex justify-center items-center gap-2">
                           <button
                             onClick={() => handleOpenEditProduct(prod)}
-                            className="p-2 border border-gray-100 dark:border-gray-800 hover:border-pink-300 dark:hover:border-pink-900 hover:text-pink-650 hover:bg-pink-50/50 dark:hover:bg-pink-950/20 text-gray-400 dark:text-gray-550 rounded-xl transition-all focus:outline-none"
+                            className="p-2 border border-gray-100 dark:border-gray-800 hover:border-pink-300 dark:hover:border-pink-900 hover:text-pink-650 hover:bg-pink-50/50 dark:hover:bg-pink-950/20 text-gray-400 dark:text-gray-500 rounded-xl transition-all focus:outline-none"
                             title="Edit Product Details"
                           >
                             <Edit size={14} />
                           </button>
                           <button
                             onClick={() => handleProductDelete(prod._id)}
-                            className="p-2 border border-gray-100 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-900 hover:text-red-650 hover:bg-red-50/50 dark:hover:bg-red-950/20 text-gray-400 dark:text-gray-550 rounded-xl transition-all focus:outline-none"
+                            className="p-2 border border-gray-100 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-900 hover:text-red-650 hover:bg-red-50/50 dark:hover:bg-red-950/20 text-gray-400 dark:text-gray-500 rounded-xl transition-all focus:outline-none"
                             title="Delete Product"
                           >
                             <Trash2 size={14} />
@@ -675,20 +675,20 @@ function Dashboard() {
                     value={homeConfig.heroTitle}
                     onChange={(e) => setHomeConfig({ ...homeConfig, heroTitle: e.target.value })}
                     placeholder="e.g. Exquisite Resin & Canvas Creations, Crafted to Elevate Your Spaces."
-                    className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-855 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-semibold"
                   />
                 </div>
 
                 {/* Hero Subtitle */}
                 <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider block">Hero Subheading Description</label>
+                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">Hero Subheading Description</label>
                   <textarea
                     required
                     rows="4"
                     value={homeConfig.heroSubtitle}
                     onChange={(e) => setHomeConfig({ ...homeConfig, heroSubtitle: e.target.value })}
                     placeholder="Describe the studio creation philosophy..."
-                    className="w-full bg-gray-50 dark:bg-gray-955 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-medium"
+                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-medium"
                   />
                 </div>
               </div>
@@ -696,20 +696,20 @@ function Dashboard() {
               {/* Banner Image Uploader (Right Column) */}
               <div className="md:col-span-5 space-y-4 text-xs font-semibold">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-550 uppercase tracking-wider block flex items-center gap-1.5">
+                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block flex items-center gap-1.5">
                     <Image size={12} className="text-pink-655" /> Hero Visual Image
                   </label>
                   
                   {heroImagePreview && (
-                    <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-850 bg-gray-50 dark:bg-gray-955 shadow-sm">
+                    <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 shadow-sm">
                       <img src={heroImagePreview} alt="Hero Banner Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
 
                   <div className="flex items-center justify-center w-full">
-                    <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-gray-250 dark:border-gray-800 rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-955 hover:bg-gray-100/50 dark:hover:bg-gray-900/50 transition-colors px-4 text-center">
+                    <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-950 hover:bg-gray-100/50 dark:hover:bg-gray-900/50 transition-colors px-4 text-center">
                       <div className="flex flex-col items-center justify-center pt-2 pb-2">
-                        <Upload className="w-6 h-6 text-gray-405 dark:text-gray-550 mb-1" />
+                        <Upload className="w-6 h-6 text-gray-400 dark:text-gray-500 mb-1" />
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 font-semibold">
                           {heroImageFile ? heroImageFile.name : "Click to upload banner image"}
                         </p>
@@ -733,21 +733,21 @@ function Dashboard() {
             </div>
 
             {/* Featured Product Picker */}
-            <div className="space-y-3 pt-6 border-t border-gray-100 dark:border-gray-850">
+            <div className="space-y-3 pt-6 border-t border-gray-100 dark:border-gray-800">
               <div>
-                <label className="text-[11px] font-bold text-gray-400 dark:text-gray-555 uppercase tracking-wider block">Featured Creations Showcase</label>
-                <p className="text-[10px] text-gray-450 dark:text-gray-500 mt-0.5">Toggle checkmarks to feature specific artworks on the homepage (typically curate up to 4 items). Selected: <strong>{selectedFeaturedProducts.length}</strong></p>
+                <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">Featured Creations Showcase</label>
+                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">Toggle checkmarks to feature specific artworks on the homepage (typically curate up to 4 items). Selected: <strong>{selectedFeaturedProducts.length}</strong></p>
               </div>
 
               {productsLoading ? (
                 <div className="py-12 flex flex-col items-center">
-                  <Loader2 className="animate-spin text-pink-650 mb-2" size={24} />
-                  <p className="text-xs text-gray-550">Loading catalog artworks...</p>
+                  <Loader2 className="animate-spin text-pink-655 mb-2" size={24} />
+                  <p className="text-xs text-gray-500">Loading catalog artworks...</p>
                 </div>
               ) : productsList.length === 0 ? (
                 <p className="text-xs text-gray-500 italic py-4">No products available in the catalog to curate.</p>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[300px] overflow-y-auto pr-2 border border-gray-100 dark:border-gray-850 p-4 rounded-2xl bg-gray-50/30 dark:bg-gray-950/20">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[300px] overflow-y-auto pr-2 border border-gray-100 dark:border-gray-800 p-4 rounded-2xl bg-gray-50/30 dark:bg-gray-950/20">
                   {productsList.map((prod) => {
                     const isChecked = selectedFeaturedProducts.includes(prod._id);
                     return (
@@ -757,7 +757,7 @@ function Dashboard() {
                         onClick={() => toggleFeaturedProduct(prod._id)}
                         className={`flex items-center gap-3 p-2.5 rounded-xl border text-left transition-all hover:scale-[1.01] ${
                           isChecked 
-                            ? "bg-pink-50/50 dark:bg-pink-950/15 border-pink-300 dark:border-pink-900 shadow-sm" 
+                            ? "bg-pink-50/50 dark:bg-pink-955/15 border-pink-300 dark:border-pink-900 shadow-sm" 
                             : "bg-white dark:bg-gray-900 border-gray-150 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700"
                         }`}
                       >
@@ -766,7 +766,7 @@ function Dashboard() {
                         </div>
                         <div className="min-w-0 text-[10px] font-semibold flex-grow">
                           <p className="text-gray-900 dark:text-white truncate" title={prod.title}>{prod.title}</p>
-                          <p className="text-gray-400 dark:text-gray-550 mt-0.5">₹{prod.price?.toLocaleString()}</p>
+                          <p className="text-gray-400 dark:text-gray-500 mt-0.5">₹{prod.price?.toLocaleString()}</p>
                         </div>
                         <div className={`w-4 h-4 rounded-full flex items-center justify-center border text-[9px] font-bold ${
                           isChecked 
@@ -783,7 +783,7 @@ function Dashboard() {
             </div>
 
             {/* Save Button */}
-            <div className="pt-4 border-t border-gray-100 dark:border-gray-850 flex justify-end">
+            <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-end">
               <button
                 type="submit"
                 disabled={homeConfigLoading}
@@ -815,7 +815,7 @@ function Dashboard() {
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500" />
             
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 p-6">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 p-6">
               <div>
                 <h3 className="text-lg font-serif font-extrabold text-gray-900 dark:text-white flex items-center gap-1.5">
                   Order Invoice details
@@ -834,12 +834,12 @@ function Dashboard() {
             <div className="p-6 overflow-y-auto space-y-6 flex-grow">
               
               {/* Row 1: Dates & Billing info */}
-              <div className="grid sm:grid-cols-2 gap-6 bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-850/60 rounded-2xl text-xs space-y-4 sm:space-y-0">
+              <div className="grid sm:grid-cols-2 gap-6 bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-800/60 rounded-2xl text-xs space-y-4 sm:space-y-0">
                 <div className="space-y-2">
                   <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px]">
                     <Calendar size={12} /> Date Placed
                   </div>
-                  <p className="font-bold text-gray-850 dark:text-gray-200">
+                  <p className="font-bold text-gray-800 dark:text-gray-200">
                     {new Date(selectedOrder.createdAt).toLocaleDateString("en-IN", {
                       weekday: "long",
                       year: "numeric",
@@ -855,8 +855,8 @@ function Dashboard() {
                   <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px]">
                     <CreditCard size={12} /> Payment Particulars
                   </div>
-                  <p className="font-bold text-gray-850 dark:text-gray-200">Method: {selectedOrder.paymentMethod || "COD"}</p>
-                  <p className="text-gray-500 dark:text-gray-400 mt-0.5 font-normal">Status: <strong className="font-semibold text-emerald-600 dark:text-emerald-450">{selectedOrder.paymentStatus}</strong></p>
+                  <p className="font-bold text-gray-800 dark:text-gray-200">Method: {selectedOrder.paymentMethod || "COD"}</p>
+                  <p className="text-gray-500 dark:text-gray-400 mt-0.5 font-normal">Status: <strong className="font-semibold text-emerald-600 dark:text-emerald-400">{selectedOrder.paymentStatus}</strong></p>
                   {selectedOrder.razorpayPaymentId && (
                     <p className="text-[10px] font-mono text-gray-400 dark:text-gray-500 font-normal">Txn ID: {selectedOrder.razorpayPaymentId}</p>
                   )}
@@ -866,7 +866,7 @@ function Dashboard() {
               {/* Row 2: Customer Shipping Address */}
               <div className="text-xs space-y-2">
                 <span className="text-gray-400 dark:text-gray-500 font-bold uppercase tracking-wider text-[9px] block">Shipping Destination Address</span>
-                <div className="bg-gray-50/50 dark:bg-gray-950/30 p-5 border border-gray-100 dark:border-gray-850/60 rounded-2xl leading-relaxed text-gray-700 dark:text-gray-300 font-normal">
+                <div className="bg-gray-50/50 dark:bg-gray-950/30 border border-gray-100 dark:border-gray-800/60 rounded-2xl leading-relaxed text-gray-700 dark:text-gray-300 font-normal">
                   <p className="font-bold text-gray-900 dark:text-white">{selectedOrder.shippingAddress?.fullName}</p>
                   <p>House / Flat: {selectedOrder.shippingAddress?.house}</p>
                   <p>Area / Locality: {selectedOrder.shippingAddress?.area}</p>
@@ -883,17 +883,17 @@ function Dashboard() {
                   {selectedOrder.items?.map((item, index) => (
                     <div 
                       key={index}
-                      className="flex items-center gap-4 p-3 border border-gray-100 dark:border-gray-850 rounded-xl"
+                      className="flex items-center gap-4 p-3 border border-gray-100 dark:border-gray-800 rounded-xl"
                     >
                       {/* Product thumbnail */}
-                      <div className="w-12 h-12 bg-gray-55 dark:bg-gray-950 rounded-lg overflow-hidden shrink-0 border border-gray-100 dark:border-gray-850">
+                      <div className="w-12 h-12 bg-gray-100 dark:bg-gray-950 rounded-lg overflow-hidden shrink-0 border border-gray-100 dark:border-gray-800">
                         <img src={item.image} alt="" className="w-full h-full object-cover" />
                       </div>
 
                       {/* Title details */}
                       <div className="flex-grow text-xs font-semibold">
                         <h4 className="text-gray-900 dark:text-white line-clamp-1">{item.title}</h4>
-                        <p className="text-gray-400 dark:text-gray-550 font-normal mt-0.5">₹{item.price?.toLocaleString()} x {item.quantity}</p>
+                        <p className="text-gray-400 dark:text-gray-500 font-normal mt-0.5">₹{item.price?.toLocaleString()} x {item.quantity}</p>
                       </div>
 
                       {/* Price subtotal */}
@@ -906,7 +906,7 @@ function Dashboard() {
               </div>
 
               {/* Final Totals Invoice cost summary */}
-              <div className="border-t border-gray-100 dark:border-gray-850 pt-4 text-xs font-semibold text-gray-600 dark:text-gray-300 space-y-2.5 max-w-xs ml-auto">
+              <div className="border-t border-gray-100 dark:border-gray-800 pt-4 text-xs font-semibold text-gray-600 dark:text-gray-300 space-y-2.5 max-w-xs ml-auto">
                 <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
                   <span>Cart Subtotal</span>
                   <span>₹{selectedOrder.totalPrice?.toLocaleString()}</span>
@@ -919,7 +919,7 @@ function Dashboard() {
                   <span>Courier delivery fee</span>
                   <span className="text-emerald-650 font-bold uppercase text-[10px]">Free Shipping</span>
                 </div>
-                <div className="flex justify-between items-baseline pt-2 border-t border-gray-100 dark:border-gray-850 text-gray-900 dark:text-white">
+                <div className="flex justify-between items-baseline pt-2 border-t border-gray-100 dark:border-gray-800 text-gray-900 dark:text-white">
                   <span className="font-bold text-sm">Amount Paid</span>
                   <span className="text-lg font-extrabold">₹{selectedOrder.totalPrice?.toLocaleString()} INR</span>
                 </div>
@@ -942,7 +942,7 @@ function Dashboard() {
             <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500" />
             
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-850 p-6">
+            <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 p-6">
               <div>
                 <h3 className="text-lg font-serif font-extrabold text-gray-900 dark:text-white flex items-center gap-1.5">
                   {editingProductId ? "Edit Artwork Details" : "Create New Artwork"}
@@ -1036,7 +1036,7 @@ function Dashboard() {
                 </div>
 
                 {/* Artwork Images Upload */}
-                <div className="space-y-2 border-t border-gray-100 dark:border-gray-850 pt-4">
+                <div className="space-y-2 border-t border-gray-100 dark:border-gray-800 pt-4">
                   <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
                     <Image size={12} className="text-pink-650" /> Upload Artwork Images
                   </label>
@@ -1044,7 +1044,7 @@ function Dashboard() {
                   {/* Current/Existing Product Images (only for editing) */}
                   {editingProductId && currentProductImages.length > 0 && (
                     <div className="space-y-1.5">
-                      <span className="text-[10px] text-gray-450 dark:text-gray-500 block font-bold">Current Images:</span>
+                      <span className="text-[10px] text-gray-400 dark:text-gray-500 block font-bold">Current Images:</span>
                       <div className="flex gap-2 overflow-x-auto pb-1">
                         {currentProductImages.map((img, idx) => (
                           <div key={idx} className="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-100 dark:border-gray-800 shrink-0">
@@ -1057,7 +1057,7 @@ function Dashboard() {
 
                   {/* Multiple File Upload input */}
                   <div className="flex items-center justify-center w-full">
-                    <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-gray-250 dark:border-gray-800 rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-950 hover:bg-gray-100/50 dark:hover:bg-gray-900/50 transition-colors px-4 py-2 text-center">
+                    <label className="flex flex-col items-center justify-center w-full h-24 border border-dashed border-gray-200 dark:border-gray-800 rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-950 hover:bg-gray-100/50 dark:hover:bg-gray-900/50 transition-colors px-4 py-2 text-center">
                       <div className="flex flex-col items-center justify-center pt-2 pb-2">
                         <Upload className="w-6 h-6 text-gray-400 dark:text-gray-500 mb-1 animate-pulse" />
                         <p className="text-[10px] text-gray-500 dark:text-gray-400 font-semibold">
@@ -1096,11 +1096,11 @@ function Dashboard() {
               </div>
 
               {/* Footer Actions */}
-              <div className="flex gap-4 border-t border-gray-100 dark:border-gray-850 p-6 bg-gray-50/50 dark:bg-gray-950/20 shrink-0">
+              <div className="flex gap-4 border-t border-gray-100 dark:border-gray-800 p-6 bg-gray-50/50 dark:bg-gray-950/20 shrink-0">
                 <button
                   type="button"
                   onClick={() => setProductModalOpen(false)}
-                  className="w-1/2 border border-gray-200 dark:border-gray-850 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-850 transition-all text-center focus:outline-none"
+                  className="w-1/2 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 font-bold text-xs uppercase tracking-wider py-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all text-center focus:outline-none"
                 >
                   Cancel
                 </button>

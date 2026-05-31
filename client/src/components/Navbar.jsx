@@ -142,7 +142,7 @@ function Navbar() {
 
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2.5 w-48 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl py-2 z-50 animate-fadeIn">
-                    <div className="px-4 py-2 border-b border-gray-50 dark:border-gray-850/50 flex items-center gap-2.5">
+                    <div className="px-4 py-2 border-b border-gray-50 dark:border-gray-800/50 flex items-center gap-2.5">
                       {userInfo.avatar && (
                         <img 
                           src={userInfo.avatar} 
@@ -159,7 +159,7 @@ function Navbar() {
                     <Link
                       to="/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="w-full text-left block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold transition-all border-b border-gray-50 dark:border-gray-850/50"
+                      className="w-full text-left block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold transition-all border-b border-gray-50 dark:border-gray-800/50"
                     >
                       My Profile & Orders
                     </Link>
