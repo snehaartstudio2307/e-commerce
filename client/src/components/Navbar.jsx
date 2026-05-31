@@ -1,13 +1,39 @@
-import { Link, useLocation } from "react-router-dom";
-import { Heart, ShoppingCart, User, Search, Sparkles, Sun, Moon } from "lucide-react";
-import { useSelector } from "react-redux";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Heart, ShoppingCart, User, Search, Sparkles, Sun, Moon, LogOut } from "lucide-react";
+import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "../context/ThemeContext";
+import { logout } from "../redux/authSlice";
+import { toast } from "react-toastify";
+import { useState, useRef, useEffect } from "react";
 
 function Navbar() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.auth);
   const { theme, toggleTheme } = useTheme();
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    setDropdownOpen(false);
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
 
   const isActive = (path) => location.pathname === path;
 
@@ -90,21 +116,75 @@ function Navbar() {
               )}
             </Link>
 
-            {/* User Profile */}
-            <Link 
-              to={userInfo ? "/profile" : "/login"} 
-              className={`flex items-center gap-2 hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full ${
-                isActive("/login") || isActive("/profile") ? "text-pink-600 bg-pink-50 dark:bg-pink-950/40" : "hover:bg-gray-50 dark:hover:bg-gray-900"
-              }`}
-              title={userInfo ? `Hello, ${userInfo.name}` : "Login"}
-            >
-              <User size={20} />
-              {userInfo && (
-                <span className="hidden lg:inline text-xs font-semibold max-w-[80px] truncate">
-                  {userInfo.name.split(" ")[0]}
-                </span>
-              )}
-            </Link>
+            {/* User Profile / Logout Dropdown */}
+            {userInfo ? (
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={`flex items-center gap-2 hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full ${
+                    dropdownOpen ? "text-pink-600 bg-pink-50 dark:bg-pink-950/40" : "hover:bg-gray-50 dark:hover:bg-gray-900"
+                  }`}
+                  title={`Hello, ${userInfo.name}`}
+                >
+                  {userInfo.avatar ? (
+                    <img 
+                      src={userInfo.avatar} 
+                      alt="" 
+                      className="w-5 h-5 rounded-full object-cover border border-pink-100/50 dark:border-pink-900/50 shadow-sm" 
+                    />
+                  ) : (
+                    <User size={20} />
+                  )}
+                  <span className="hidden lg:inline text-xs font-semibold max-w-[80px] truncate text-left">
+                    {userInfo.name.split(" ")[0]}
+                  </span>
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2.5 w-48 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl py-2 z-50 animate-fadeIn">
+                    <div className="px-4 py-2 border-b border-gray-50 dark:border-gray-850/50 flex items-center gap-2.5">
+                      {userInfo.avatar && (
+                        <img 
+                          src={userInfo.avatar} 
+                          alt="" 
+                          className="w-8 h-8 rounded-full object-cover border border-pink-200/50 dark:border-pink-900/50 shadow-sm shrink-0" 
+                        />
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-[9px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Signed in as</p>
+                        <p className="text-xs font-bold text-gray-800 dark:text-gray-200 truncate">{userInfo.name}</p>
+                      </div>
+                    </div>
+                    
+                    <Link
+                      to="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className="w-full text-left block px-4 py-2.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 font-semibold transition-all border-b border-gray-50 dark:border-gray-850/50"
+                    >
+                      My Profile & Orders
+                    </Link>
+                    
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-red-950/10 font-bold transition-all flex items-center gap-2"
+                    >
+                      <LogOut size={14} />
+                      Log Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                className={`flex items-center gap-2 hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full ${
+                  isActive("/login") ? "text-pink-600 bg-pink-50 dark:bg-pink-950/40" : "hover:bg-gray-50 dark:hover:bg-gray-900"
+                }`}
+                title="Login"
+              >
+                <User size={20} />
+              </Link>
+            )}
 
             {/* Theme Toggle Button */}
             <button 

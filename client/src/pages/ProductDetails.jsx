@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { 
@@ -35,8 +35,9 @@ function ProductDetails() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   // Fetch product details
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
+      await Promise.resolve();
       setLoading(true);
       const { data } = await api.get(`/products/${id}`);
       setProduct(data);
@@ -47,27 +48,32 @@ function ProductDetails() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
 
   useEffect(() => {
-    fetchProduct();
-  }, [id]);
+    Promise.resolve().then(() => {
+      fetchProduct();
+    });
+  }, [fetchProduct]);
 
   // Check wishlist state
   useEffect(() => {
-    if (product) {
+    let active = true;
+    const checkWishlist = async () => {
+      if (!product) return;
+      await Promise.resolve();
+      if (!active) return;
+
       if (userInfo) {
         // Authenticated user wishlist check
-        const fetchWishlist = async () => {
-          try {
-            const { data } = await api.get("/products/wishlist/me");
-            const inWishlist = data.some((item) => item._id === product._id);
-            setIsWishlisted(inWishlist);
-          } catch (err) {
-            console.error("Error fetching authenticated wishlist:", err);
-          }
-        };
-        fetchWishlist();
+        try {
+          const { data } = await api.get("/products/wishlist/me");
+          if (!active) return;
+          const inWishlist = data.some((item) => item._id === product._id);
+          setIsWishlisted(inWishlist);
+        } catch (err) {
+          console.error("Error fetching authenticated wishlist:", err);
+        }
       } else {
         // Guest user wishlist check in localStorage
         const guestWishlist = localStorage.getItem("wishlist")
@@ -75,7 +81,11 @@ function ProductDetails() {
           : [];
         setIsWishlisted(guestWishlist.includes(product._id));
       }
-    }
+    };
+    checkWishlist();
+    return () => {
+      active = false;
+    };
   }, [product, userInfo]);
 
   const handleQtyChange = (val) => {

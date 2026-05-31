@@ -14,13 +14,19 @@ import {
   Truck, 
   Gift, 
   Star,
-  ChevronRight
+  ChevronRight,
+  CheckCircle
 } from "lucide-react";
 import { toast } from "react-toastify";
 
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [homeConfig, setHomeConfig] = useState({
+    heroTitle: "Exquisite Resin & Canvas Creations, Crafted to Elevate Your Spaces.",
+    heroSubtitle: "From glass-like geode wall clocks and gilded crystal coasters to preserving your most precious wedding flowers in crystal-clear resin blocks, every creation is hand-poured with love and premium pigments.",
+    heroImage: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=600&q=80"
+  });
   const [inquirySubmitted, setInquirySubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -31,22 +37,58 @@ function Home() {
     details: ""
   });
 
-  // Fetch featured products
+  // Fetch home config and featured products
   useEffect(() => {
-    const fetchFeatured = async () => {
+    const fetchHomeConfigAndProducts = async () => {
       try {
         setLoading(true);
-        const { data } = await api.get("/products");
-        // Get the first 4 products for homepage
-        setFeaturedProducts(data.slice(0, 4));
+        const { data: config } = await api.get("/home-config");
+        if (config) {
+          setHomeConfig({
+            heroTitle: config.heroTitle || "Exquisite Resin & Canvas Creations, Crafted to Elevate Your Spaces.",
+            heroSubtitle: config.heroSubtitle || "From glass-like geode wall clocks and gilded crystal coasters to preserving your most precious wedding flowers in crystal-clear resin blocks, every creation is hand-poured with love and premium pigments.",
+            heroImage: config.heroImage || "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=600&q=80"
+          });
+          
+          if (config.featuredProducts && config.featuredProducts.length > 0) {
+            setFeaturedProducts(config.featuredProducts);
+          } else {
+            const { data: prods } = await api.get("/products");
+            setFeaturedProducts(prods.slice(0, 4));
+          }
+        }
       } catch (error) {
-        console.error("Error fetching featured products:", error);
+        console.error("Error fetching home config:", error);
+        try {
+          const { data: prods } = await api.get("/products");
+          setFeaturedProducts(prods.slice(0, 4));
+        } catch (err) {
+          console.error("Error fetching fallback products:", err);
+        }
       } finally {
         setLoading(false);
       }
     };
-    fetchFeatured();
+    fetchHomeConfigAndProducts();
   }, []);
+
+  const renderHeroTitle = () => {
+    const title = homeConfig.heroTitle;
+    const commaIndex = title.lastIndexOf(",");
+    if (commaIndex !== -1) {
+      const part1 = title.substring(0, commaIndex + 1);
+      const part2 = title.substring(commaIndex + 1);
+      return (
+        <>
+          {part1}{" "}
+          <span className="bg-gradient-to-r from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
+            {part2}
+          </span>
+        </>
+      );
+    }
+    return title;
+  };
 
   const handleInquiryChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -146,14 +188,11 @@ function Home() {
             </div>
             
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
-              Exquisite Resin & Canvas Creations,{" "}
-              <span className="bg-gradient-to-r from-pink-600 via-rose-500 to-amber-500 bg-clip-text text-transparent">
-                Crafted to Elevate Your Spaces.
-              </span>
+              {renderHeroTitle()}
             </h1>
             
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              From glass-like geode wall clocks and gilded crystal coasters to preserving your most precious wedding flowers in crystal-clear resin blocks, every creation is hand-poured with love and premium pigments.
+              {homeConfig.heroSubtitle}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
@@ -193,7 +232,7 @@ function Home() {
           <div className="lg:col-span-5 relative flex justify-center">
             <div className="relative w-full max-w-[420px] aspect-[4/5] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white dark:border-gray-800 transform hover:scale-[1.02] transition-all duration-500">
               <img 
-                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=600&q=80" 
+                src={homeConfig.heroImage} 
                 alt="Sneha Resin Art Painting in Progress"
                 className="w-full h-full object-cover"
               />
@@ -410,103 +449,123 @@ function Home() {
 
           {/* The Form Card */}
           <div className="lg:col-span-6">
-            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-xl relative overflow-hidden">
+            <div className="bg-white dark:bg-gray-900 rounded-3xl p-8 border border-gray-100 dark:border-gray-800 shadow-xl relative overflow-hidden min-h-[400px] flex flex-col justify-center">
               <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-500 to-amber-500" />
               
-              <h3 className="font-serif font-bold text-xl text-gray-900 dark:text-white mb-6">
-                Submit a Preservation Inquiry
-              </h3>
-              
-              <form onSubmit={handleInquirySubmit} className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Your Name</label>
-                    <input 
-                      type="text" 
-                      name="name"
-                      required
-                      value={formData.name}
-                      onChange={handleInquiryChange}
-                      placeholder="e.g. Aditi Sharma" 
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
-                    />
+              {inquirySubmitted ? (
+                <div className="text-center py-8 space-y-4 animate-fadeIn">
+                  <div className="w-16 h-16 bg-emerald-50 dark:bg-emerald-950/20 rounded-full flex items-center justify-center text-emerald-650 dark:text-emerald-400 mx-auto mb-4 border border-emerald-100 dark:border-emerald-900/30">
+                    <CheckCircle size={28} className="animate-bounce" />
                   </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Email Address</label>
-                    <input 
-                      type="email" 
-                      name="email"
-                      required
-                      value={formData.email}
-                      onChange={handleInquiryChange}
-                      placeholder="e.g. aditi@gmail.com" 
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
-                    />
-                  </div>
+                  <h3 className="font-serif font-bold text-xl text-gray-900 dark:text-white">Inquiry Received!</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed max-w-sm mx-auto font-normal">
+                    Thank you! Your custom preservation request has been received. Sneha will contact you shortly to review your event details.
+                  </p>
+                  <button
+                    onClick={() => setInquirySubmitted(false)}
+                    className="inline-block text-xs font-bold text-pink-600 dark:text-pink-500 hover:underline pt-4"
+                  >
+                    Submit another inquiry
+                  </button>
                 </div>
+              ) : (
+                <>
+                  <h3 className="font-serif font-bold text-xl text-gray-900 dark:text-white mb-6">
+                    Submit a Preservation Inquiry
+                  </h3>
+                  
+                  <form onSubmit={handleInquirySubmit} className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Your Name</label>
+                        <input 
+                          type="text" 
+                          name="name"
+                          required
+                          value={formData.name}
+                          onChange={handleInquiryChange}
+                          placeholder="e.g. Aditi Sharma" 
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Email Address</label>
+                        <input 
+                          type="email" 
+                          name="email"
+                          required
+                          value={formData.email}
+                          onChange={handleInquiryChange}
+                          placeholder="e.g. aditi@gmail.com" 
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        />
+                      </div>
+                    </div>
 
-                <div className="grid sm:grid-cols-2 gap-4">
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phone"
-                      required
-                      value={formData.phone}
-                      onChange={handleInquiryChange}
-                      placeholder="e.g. +91 9876543210" 
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
-                    />
-                  </div>
-                  <div className="space-y-1.5">
-                    <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Preservation Type</label>
-                    <select 
-                      name="eventType"
-                      value={formData.eventType}
-                      onChange={handleInquiryChange}
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                    <div className="grid sm:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Phone Number</label>
+                        <input 
+                          type="tel" 
+                          name="phone"
+                          required
+                          value={formData.phone}
+                          onChange={handleInquiryChange}
+                          placeholder="e.g. +91 9876543210" 
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Preservation Type</label>
+                        <select 
+                          name="eventType"
+                          value={formData.eventType}
+                          onChange={handleInquiryChange}
+                          className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-805 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                        >
+                          <option value="Wedding">Wedding Varmala / Bouquet</option>
+                          <option value="Engagement">Engagement Flowers</option>
+                          <option value="Memorial">Memorial Flowers</option>
+                          <option value="Anniversary">Anniversary Bouquet</option>
+                          <option value="Custom Table">Custom Resin Art / Geode Clock</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Event / Delivery Date</label>
+                      <input 
+                        type="date" 
+                        name="eventDate"
+                        required
+                        value={formData.eventDate}
+                        onChange={handleInquiryChange}
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-805 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Request Details / Floral Layout Ideas</label>
+                      <textarea 
+                        name="details"
+                        rows="3"
+                        value={formData.details}
+                        onChange={handleInquiryChange}
+                        placeholder="Describe what flowers you have, shapes you are interested in (hexagon, cube, bookends), or custom color themes..." 
+                        className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                      ></textarea>
+                    </div>
+
+                    <button 
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-pink-600 to-rose-500 text-white font-semibold text-xs uppercase tracking-wider py-3.5 rounded-xl hover:opacity-95 shadow-md shadow-pink-500/10 hover:shadow-pink-500/20 transition-all duration-300 flex items-center justify-center gap-2"
                     >
-                      <option value="Wedding">Wedding Varmala / Bouquet</option>
-                      <option value="Engagement">Engagement Flowers</option>
-                      <option value="Memorial">Memorial Flowers</option>
-                      <option value="Anniversary">Anniversary Bouquet</option>
-                      <option value="Custom Table">Custom Resin Art / Geode Clock</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Event / Delivery Date</label>
-                  <input 
-                    type="date" 
-                    name="eventDate"
-                    required
-                    value={formData.eventDate}
-                    onChange={handleInquiryChange}
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-805 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-gray-400 dark:text-gray-500 uppercase">Request Details / Floral Layout Ideas</label>
-                  <textarea 
-                    name="details"
-                    rows="3"
-                    value={formData.details}
-                    onChange={handleInquiryChange}
-                    placeholder="Describe what flowers you have, shapes you are interested in (hexagon, cube, bookends), or custom color themes..." 
-                    className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-805 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
-                  ></textarea>
-                </div>
-
-                <button 
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-pink-600 to-rose-500 text-white font-semibold text-xs uppercase tracking-wider py-3.5 rounded-xl hover:opacity-95 shadow-md shadow-pink-500/10 hover:shadow-pink-500/20 transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  Send Inquiry Request
-                  <ChevronRight size={14} />
-                </button>
-              </form>
+                      Send Inquiry Request
+                      <ChevronRight size={14} />
+                    </button>
+                  </form>
+                </>
+              )}
             </div>
           </div>
 

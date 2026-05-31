@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Heart, ShoppingCart, Trash2, ArrowRight, Sparkles, Star } from "lucide-react";
@@ -13,8 +13,9 @@ function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchWishlist = async () => {
+  const fetchWishlist = useCallback(async () => {
     try {
+      await Promise.resolve();
       setLoading(true);
       if (userInfo) {
         // Logged-in: Fetch populated wishlist from backend
@@ -40,11 +41,13 @@ function Wishlist() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [userInfo]);
 
   useEffect(() => {
-    fetchWishlist();
-  }, [userInfo]);
+    Promise.resolve().then(() => {
+      fetchWishlist();
+    });
+  }, [fetchWishlist]);
 
   const handleRemoveFromWishlist = async (productId) => {
     try {

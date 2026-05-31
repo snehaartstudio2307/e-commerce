@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { 
@@ -13,7 +13,8 @@ import {
   CheckCircle,
   CreditCard,
   ChevronLeft,
-  Loader2
+  Loader2,
+  MapPin
 } from "lucide-react";
 import { removeFromCart, updateCartQty, clearCart } from "../redux/cartSlice";
 import { toast } from "react-toastify";
@@ -33,6 +34,11 @@ function Cart() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [placedOrder, setPlacedOrder] = useState(null);
 
+  // Saved Addresses list & Checkbox states
+  const [savedAddresses, setSavedAddresses] = useState([]);
+  const [saveAddressChecked, setSaveAddressChecked] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+
   // Shipping Address Form State
   const [shippingAddress, setShippingAddress] = useState({
     fullName: "",
@@ -47,10 +53,53 @@ function Cart() {
 
   // Pre-fill Name if user logs in
   useEffect(() => {
-    if (userInfo && !shippingAddress.fullName) {
-      setShippingAddress((prev) => ({ ...prev, fullName: userInfo.name }));
+    let active = true;
+    const prefill = async () => {
+      await Promise.resolve();
+      if (!active) return;
+      if (userInfo && !shippingAddress.fullName) {
+        setShippingAddress((prev) => ({ ...prev, fullName: userInfo.name }));
+      }
+    };
+    prefill();
+    return () => {
+      active = false;
+    };
+  }, [userInfo, shippingAddress.fullName]);
+
+  // Fetch saved addresses if logged in and on checkout step
+  const fetchSavedAddresses = useCallback(async () => {
+    try {
+      await Promise.resolve();
+      if (!userInfo) return;
+      const { data } = await api.get("/auth/profile");
+      setSavedAddresses(data.addresses || []);
+    } catch (err) {
+      console.error("Failed to load user saved addresses:", err);
     }
   }, [userInfo]);
+
+  useEffect(() => {
+    if (isCheckoutStep) {
+      Promise.resolve().then(() => {
+        fetchSavedAddresses();
+      });
+    }
+  }, [isCheckoutStep, fetchSavedAddresses]);
+
+  const handleSelectSavedAddress = (addr) => {
+    setSelectedAddressId(addr._id);
+    setShippingAddress({
+      fullName: addr.fullName,
+      phone: addr.phone,
+      house: addr.house,
+      area: addr.area,
+      city: addr.city,
+      state: addr.state,
+      pincode: addr.pincode,
+      landmark: addr.landmark || ""
+    });
+  };
 
   const handleQtyChange = (item, newQty) => {
     if (newQty < 1) return;
@@ -172,6 +221,15 @@ function Cart() {
             setPaymentSuccess(true);
             dispatch(clearCart());
             toast.success("Payment successful!");
+
+            // Save address to profile if checked
+            if (saveAddressChecked) {
+              try {
+                await api.post("/auth/addresses", shippingAddress);
+              } catch (addrErr) {
+                console.error("Failed to save address to profile:", addrErr);
+              }
+            }
           } catch (err) {
             console.error("Signature verification error:", err);
             toast.error("Payment verification failed on server.");
@@ -426,6 +484,37 @@ function Cart() {
                   </button>
                 </div>
 
+                {/* Saved Address Quick Selector */}
+                {savedAddresses.length > 0 && (
+                  <div className="space-y-3 pb-5 border-b border-gray-100 dark:border-gray-850/80 mb-5">
+                    <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+                      <MapPin size={12} className="text-pink-650" />
+                      Select from Saved Addresses
+                    </span>
+                    <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+                      {savedAddresses.map((addr) => {
+                        const isSelected = selectedAddressId === addr._id;
+                        return (
+                          <button
+                            key={addr._id}
+                            type="button"
+                            onClick={() => handleSelectSavedAddress(addr)}
+                            className={`p-4 rounded-2xl border text-left shrink-0 w-64 transition-all hover:border-pink-300 dark:hover:border-pink-500 ${
+                              isSelected
+                                ? "border-pink-600 bg-pink-50/20 dark:bg-pink-950/10 ring-2 ring-pink-500/20"
+                                : "border-gray-200 dark:border-gray-800 bg-gray-50/30 dark:bg-gray-950/20"
+                            }`}
+                          >
+                            <p className="text-xs font-bold text-gray-900 dark:text-white truncate">{addr.fullName}</p>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-450 mt-1 truncate">{addr.house}, {addr.area}</p>
+                            <p className="text-[10px] text-gray-500 dark:text-gray-450 truncate">{addr.city}, {addr.state} - {addr.pincode}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 <form onSubmit={handlePaymentSubmit} className="space-y-4">
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
@@ -528,8 +617,25 @@ function Cart() {
                       value={shippingAddress.landmark}
                       onChange={handleAddressChange}
                       placeholder="e.g. Near Metro Station" 
-                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-200 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
+                      className="w-full bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-800 dark:text-gray-205 focus:outline-none focus:border-pink-500 dark:focus:border-pink-500 focus:bg-white dark:focus:bg-gray-900 transition-all"
                     />
+                  </div>
+
+                  {/* Save address checkbox */}
+                  <div className="flex items-center gap-2.5 py-2">
+                    <input
+                      type="checkbox"
+                      id="saveAddressCheckbox"
+                      checked={saveAddressChecked}
+                      onChange={(e) => setSaveAddressChecked(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 dark:border-gray-700 text-pink-600 focus:ring-pink-500 cursor-pointer"
+                    />
+                    <label 
+                      htmlFor="saveAddressCheckbox"
+                      className="text-xs text-gray-600 dark:text-gray-400 font-semibold cursor-pointer select-none"
+                    >
+                      Save this address to my profile for future purchases
+                    </label>
                   </div>
 
                   {/* Payment Submission Button Trigger */}

@@ -97,3 +97,102 @@ export const loginUser = async (req, res) => {
 export const getProfile = async (req, res) => {
   res.json(req.user);
 };
+
+export const addAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    user.addresses.push(req.body);
+    await user.save();
+    res.status(201).json(user.addresses);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const updateAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    const address = user.addresses.id(req.params.id);
+    if (!address) {
+      return res.status(404).json({
+        message: "Address not found",
+      });
+    }
+    Object.assign(address, req.body);
+    await user.save();
+    res.json(user.addresses);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const deleteAddress = async (req, res) => {
+  try {
+    const user = req.user;
+    user.addresses = user.addresses.filter(
+      (addr) => addr._id.toString() !== req.params.id
+    );
+    await user.save();
+    res.json(user.addresses);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    user.name = req.body.name || user.name;
+    
+    if (req.body.email) {
+      if (!validator.isEmail(req.body.email)) {
+        return res.status(400).json({
+          message: "Invalid email address",
+        });
+      }
+      user.email = req.body.email.toLowerCase();
+    }
+
+    if (req.body.password) {
+      if (req.body.password.length < 6) {
+        return res.status(400).json({
+          message: "Password must be at least 6 characters long",
+        });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
+    }
+
+    if (req.file) {
+      user.avatar = `http://localhost:5000/uploads/${req.file.filename}`;
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      avatar: updatedUser.avatar || "",
+      token: generateToken(updatedUser._id),
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
