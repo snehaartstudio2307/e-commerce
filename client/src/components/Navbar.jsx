@@ -1,5 +1,5 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Heart, ShoppingCart, User, Search, Sparkles, Sun, Moon, LogOut } from "lucide-react";
+import { Heart, ShoppingCart, User, Search, Sparkles, Sun, Moon, LogOut, Menu, X as CloseIcon } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "../context/ThemeContext";
 import { logout } from "../redux/authSlice";
@@ -16,6 +16,7 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [prevSearch, setPrevSearch] = useState(location.search);
   const dropdownRef = useRef(null);
@@ -119,7 +120,7 @@ function Navbar() {
           <div className="flex gap-5 sm:gap-6 items-center font-medium text-sm text-gray-600 dark:text-gray-300">
             <Link 
               to="/products"
-              className={`hover:text-pink-600 dark:hover:text-pink-500 transition-colors py-2 relative ${
+              className={`hidden md:inline-block hover:text-pink-600 dark:hover:text-pink-500 transition-colors py-2 relative ${
                 isActive("/products") ? "text-pink-600 dark:text-pink-500 font-semibold" : ""
               }`}
             >
@@ -132,7 +133,7 @@ function Navbar() {
             {userInfo && userInfo.isAdmin && (
               <Link 
                 to="/admin/dashboard"
-                className={`hover:text-pink-600 dark:hover:text-pink-500 transition-colors py-2 relative ${
+                className={`hidden md:inline-block hover:text-pink-600 dark:hover:text-pink-500 transition-colors py-2 relative ${
                   isActive("/admin/dashboard") ? "text-pink-600 dark:text-pink-500 font-semibold" : ""
                 }`}
               >
@@ -253,10 +254,41 @@ function Navbar() {
             >
               {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
             </button>
+
+            {/* Mobile Menu Toggle Button */}
+            <button 
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-900 text-gray-600 dark:text-gray-300 focus:outline-none"
+              title="Toggle menu"
+            >
+              {mobileMenuOpen ? <CloseIcon size={20} /> : <Menu size={20} />}
+            </button>
           </div>
 
         </div>
       </div>
+
+      {/* Mobile menu dropdown list */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-t border-gray-100/50 dark:border-gray-900 bg-white/95 dark:bg-gray-950/95 backdrop-blur-lg px-6 py-4 space-y-2 animate-fadeIn">
+          <Link 
+            to="/products"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-xs font-bold text-gray-700 dark:text-gray-200 hover:text-pink-605 py-2.5 border-b border-gray-50/50 dark:border-gray-900/50 uppercase tracking-wider"
+          >
+            Shop Collections
+          </Link>
+          {userInfo && userInfo.isAdmin && (
+            <Link 
+              to="/admin/dashboard"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block text-xs font-bold text-gray-700 dark:text-gray-200 hover:text-pink-605 py-2.5 uppercase tracking-wider"
+            >
+              Admin Panel
+            </Link>
+          )}
+        </div>
+      )}
     </nav>
   );
 }
