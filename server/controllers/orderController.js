@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import Product from "../models/Product.js";
 import Order from "../models/Order.js";
+import Coupon from "../models/Coupon.js";
 
 export const addToCart = async (req, res) => {
   try {
@@ -109,7 +110,7 @@ export const removeCartItem = async (req, res) => {
 
 export const placeOrder = async (req, res) => {
   try {
-    const { shippingAddress } = req.body;
+    const { shippingAddress, couponCode } = req.body;
 
     const user = await req.user.populate("cart.product");
 
@@ -117,6 +118,23 @@ export const placeOrder = async (req, res) => {
       return res.status(400).json({
         message: "Cart is empty",
       });
+    }
+
+    let discountPercentage = 0;
+    let couponDoc = null;
+
+    if (couponCode) {
+      couponDoc = await Coupon.findOne({
+        code: couponCode.toUpperCase().trim(),
+        isActive: true,
+      });
+
+      if (!couponDoc) {
+        return res.status(400).json({
+          message: "Invalid or inactive coupon code",
+        });
+      }
+      discountPercentage = couponDoc.discountPercentage;
     }
 
     let totalPrice = 0;
@@ -133,11 +151,19 @@ export const placeOrder = async (req, res) => {
       };
     });
 
+    let discountAmount = 0;
+    if (discountPercentage > 0) {
+      discountAmount = Math.round(totalPrice * (discountPercentage / 100));
+      totalPrice = Math.max(0, totalPrice - discountAmount);
+    }
+
     const order = await Order.create({
       user: user._id,
       items,
       shippingAddress,
       totalPrice,
+      couponCode: couponDoc ? couponDoc.code : undefined,
+      discountAmount,
     });
 
     user.cart = [];

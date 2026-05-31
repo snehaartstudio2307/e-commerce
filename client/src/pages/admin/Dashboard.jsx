@@ -18,7 +18,8 @@ import {
   Trash2,
   Image,
   Package,
-  Upload
+  Upload,
+  Tag
 } from "lucide-react";
 import api from "../../services/api";
 import { toast } from "react-toastify";
@@ -33,6 +34,12 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [statsLoading, setStatsLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
+
+  // Coupon States
+  const [coupons, setCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [couponForm, setCouponForm] = useState({ code: "", discountPercentage: "" });
+  const [couponSubmitLoading, setCouponSubmitLoading] = useState(false);
 
   // Product Catalog States
   const [productsList, setProductsList] = useState([]);
@@ -131,6 +138,54 @@ function Dashboard() {
     }
   }, []);
 
+  const fetchCoupons = useCallback(async () => {
+    try {
+      setCouponsLoading(true);
+      const { data } = await api.get("/coupons");
+      setCoupons(data || []);
+    } catch (err) {
+      console.error("Error fetching coupons:", err);
+      toast.error("Failed to load coupon list.");
+    } finally {
+      setCouponsLoading(false);
+    }
+  }, []);
+
+  const handleCreateCoupon = async (e) => {
+    e.preventDefault();
+    if (!couponForm.code.trim() || !couponForm.discountPercentage) {
+      toast.warning("Please fill all coupon fields.");
+      return;
+    }
+    setCouponSubmitLoading(true);
+    try {
+      await api.post("/coupons", {
+        code: couponForm.code.toUpperCase().trim(),
+        discountPercentage: Number(couponForm.discountPercentage),
+      });
+      toast.success("Coupon created successfully!");
+      setCouponForm({ code: "", discountPercentage: "" });
+      fetchCoupons();
+    } catch (err) {
+      console.error("Error creating coupon:", err);
+      toast.error(err.response?.data?.message || "Failed to create coupon.");
+    } finally {
+      setCouponSubmitLoading(false);
+    }
+  };
+
+  const handleDeleteCoupon = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    try {
+      await api.delete(`/coupons/${id}`);
+      toast.success("Coupon deleted.");
+      fetchCoupons();
+    } catch (err) {
+      console.error("Error deleting coupon:", err);
+      toast.error("Failed to delete coupon.");
+    }
+  };
+
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
       Promise.resolve().then(() => {
@@ -138,9 +193,10 @@ function Dashboard() {
         fetchOrders();
         fetchProductsList();
         fetchHomeConfig();
+        fetchCoupons();
       });
     }
-  }, [userInfo, fetchStats, fetchOrders, fetchProductsList, fetchHomeConfig]);
+  }, [userInfo, fetchStats, fetchOrders, fetchProductsList, fetchHomeConfig, fetchCoupons]);
 
   const toggleFeaturedProduct = (prodId) => {
     if (selectedFeaturedProducts.includes(prodId)) {
@@ -363,6 +419,18 @@ function Dashboard() {
         >
           <Sparkles size={14} />
           Homepage Control
+        </button>
+
+        <button
+          onClick={() => setActiveAdminTab("coupons")}
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-bold transition-all ${
+            activeAdminTab === "coupons"
+              ? "bg-pink-600 text-white shadow-md shadow-pink-500/10"
+              : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50"
+          }`}
+        >
+          <Tag size={14} />
+          Discount Coupons
         </button>
       </div>
 
@@ -803,7 +871,120 @@ function Dashboard() {
         </div>
       )}
 
-      {/* 4. DETAILED INVOICE MODAL POPUP */}
+      {/* 4. COUPON MANAGEMENT VIEW */}
+      {activeAdminTab === "coupons" && (
+        <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2.5rem] p-6 shadow-sm space-y-6 overflow-hidden">
+          <div className="px-2">
+            <h2 className="text-xl font-serif font-extrabold text-gray-900 dark:text-white">Discount Coupons Management</h2>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Create and manage coupon codes to offer percentage discounts to customers.</p>
+          </div>
+
+          <div className="grid md:grid-cols-12 gap-8 items-start">
+            {/* Left side: Create Coupon Form */}
+            <div className="md:col-span-4 bg-gray-50/50 dark:bg-gray-950/20 border border-gray-100 dark:border-gray-800/60 rounded-3xl p-6 space-y-4">
+              <h3 className="font-serif font-bold text-sm text-gray-900 dark:text-white flex items-center gap-1.5 border-b border-gray-100 dark:border-gray-850 pb-3 mb-2">
+                <Tag size={16} className="text-pink-600" /> Create Discount Coupon
+              </h3>
+              
+              <form onSubmit={handleCreateCoupon} className="space-y-4 text-xs font-semibold text-gray-700 dark:text-gray-300">
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Coupon Code</label>
+                  <input
+                    type="text"
+                    required
+                    value={couponForm.code}
+                    onChange={(e) => setCouponForm({ ...couponForm, code: e.target.value })}
+                    placeholder="e.g. WELCOME20"
+                    className="w-full bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-850 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-mono uppercase"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Discount Percentage (%)</label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    max="100"
+                    value={couponForm.discountPercentage}
+                    onChange={(e) => setCouponForm({ ...couponForm, discountPercentage: e.target.value })}
+                    placeholder="e.g. 15"
+                    className="w-full bg-white dark:bg-gray-900 border border-gray-150 dark:border-gray-800 rounded-xl px-4 py-2.5 text-xs text-gray-850 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={couponSubmitLoading}
+                  className="w-full bg-gradient-to-r from-pink-650 to-rose-500 hover:opacity-95 text-white font-semibold text-xs uppercase tracking-wider py-3.5 rounded-xl shadow-md transition-all duration-300 flex items-center justify-center gap-2 mt-2 disabled:opacity-50"
+                >
+                  {couponSubmitLoading ? "Creating..." : "Create Coupon"}
+                  <Plus size={14} />
+                </button>
+              </form>
+            </div>
+
+            {/* Right side: Coupons List */}
+            <div className="md:col-span-8 space-y-4">
+              <h3 className="font-serif font-bold text-sm text-gray-900 dark:text-white px-2">
+                Active Coupons Catalog
+              </h3>
+
+              {couponsLoading ? (
+                <div className="py-12 text-center flex flex-col items-center">
+                  <Loader2 className="animate-spin text-pink-650 mb-3" size={24} />
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Loading coupons database records...</p>
+                </div>
+              ) : coupons.length === 0 ? (
+                <div className="py-12 text-center bg-gray-50 dark:bg-gray-950 rounded-2xl border border-dashed border-gray-200 dark:border-gray-800">
+                  <p className="text-gray-500 dark:text-gray-400 text-xs">No active discount coupon codes found in the system.</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto border border-gray-100 dark:border-gray-800/80 rounded-2xl">
+                  <table className="w-full text-left border-collapse text-xs">
+                    <thead>
+                      <tr className="bg-gray-50/50 dark:bg-gray-950/40 border-b border-gray-100 dark:border-gray-800 text-gray-400 dark:text-gray-500 uppercase tracking-wider font-bold">
+                        <th className="py-3 px-4">Coupon Code</th>
+                        <th className="py-3 px-4 text-center">Discount Percentage</th>
+                        <th className="py-3 px-4 text-center">Fulfillment Status</th>
+                        <th className="py-3 px-4 text-center">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-50 dark:divide-gray-800/60 text-gray-700 dark:text-gray-300 font-medium">
+                      {coupons.map((coupon) => (
+                        <tr key={coupon._id} className="hover:bg-gray-50/30 dark:hover:bg-gray-950/20 transition-colors">
+                          <td className="py-4 px-4 font-mono font-bold text-gray-900 dark:text-white uppercase tracking-wider text-sm">
+                            {coupon.code}
+                          </td>
+                          <td className="py-4 px-4 text-center text-sm font-bold text-pink-600 dark:text-pink-400">
+                            {coupon.discountPercentage}% OFF
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border border-emerald-100/30">
+                              Active
+                            </span>
+                          </td>
+                          <td className="py-4 px-4 text-center">
+                            <button
+                              onClick={() => handleDeleteCoupon(coupon._id)}
+                              className="p-2 border border-gray-100 dark:border-gray-800 hover:border-red-300 dark:hover:border-red-900 hover:text-red-650 hover:bg-red-50/30 dark:hover:bg-red-950/10 text-gray-400 dark:text-gray-500 rounded-xl transition-all"
+                              title="Delete Coupon"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. DETAILED INVOICE MODAL POPUP */}
       {modalOpen && selectedOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           {/* Backdrop */}
@@ -907,10 +1088,23 @@ function Dashboard() {
 
               {/* Final Totals Invoice cost summary */}
               <div className="border-t border-gray-100 dark:border-gray-800 pt-4 text-xs font-semibold text-gray-600 dark:text-gray-300 space-y-2.5 max-w-xs ml-auto">
-                <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
-                  <span>Cart Subtotal</span>
-                  <span>₹{selectedOrder.totalPrice?.toLocaleString()}</span>
-                </div>
+                {selectedOrder.couponCode ? (
+                  <>
+                    <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                      <span>Cart Subtotal</span>
+                      <span>₹{(selectedOrder.totalPrice + selectedOrder.discountAmount).toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                      <span>Coupon Discount ({selectedOrder.couponCode})</span>
+                      <span className="text-rose-650 font-bold">-₹{selectedOrder.discountAmount.toLocaleString()}</span>
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                    <span>Cart Subtotal</span>
+                    <span>₹{selectedOrder.totalPrice?.toLocaleString()}</span>
+                  </div>
+                )}
                 <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
                   <span>Est. GST (18%)</span>
                   <span>Included</span>

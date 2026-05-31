@@ -34,6 +34,12 @@ function Cart() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [placedOrder, setPlacedOrder] = useState(null);
 
+  // Coupon States
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponError, setCouponError] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+
   // Saved Addresses list & Checkbox states
   const [savedAddresses, setSavedAddresses] = useState([]);
   const [saveAddressChecked, setSaveAddressChecked] = useState(false);
@@ -189,7 +195,10 @@ function Cart() {
 
       // 3. Create Backend Order
       setLoadingText("Creating your order receipt...");
-      const { data: order } = await api.post("/orders", { shippingAddress });
+      const { data: order } = await api.post("/orders", { 
+        shippingAddress,
+        couponCode: appliedCoupon ? appliedCoupon.code : undefined
+      });
 
       // 4. Create Razorpay Payment Order on Server
       setLoadingText("Generating secure Razorpay payment credentials...");
@@ -263,12 +272,44 @@ function Cart() {
     }
   };
 
+  const handleApplyCoupon = async (e) => {
+    e.preventDefault();
+    if (!couponCode.trim()) {
+      toast.warning("Please enter a coupon code");
+      return;
+    }
+    setCouponLoading(true);
+    setCouponError("");
+    try {
+      const { data } = await api.post("/coupons/validate", { code: couponCode.trim() });
+      setAppliedCoupon(data);
+      toast.success(`Coupon "${data.code}" applied! ${data.discountPercentage}% discount`);
+    } catch (err) {
+      console.error(err);
+      setCouponError(err.response?.data?.message || "Invalid coupon code");
+      setAppliedCoupon(null);
+      toast.error(err.response?.data?.message || "Invalid coupon code");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponError("");
+    toast.info("Coupon removed");
+  };
+
   // Math calculations
   const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.qty, 0);
-  const tax = Math.round(subtotal * 0.18); // 18% GST estimate
+  const discountPercentage = appliedCoupon ? appliedCoupon.discountPercentage : 0;
+  const discountAmount = Math.round(subtotal * (discountPercentage / 100));
+  const subtotalAfterDiscount = subtotal - discountAmount;
+  const tax = Math.round(subtotalAfterDiscount * 0.18); // 18% GST estimate
   const shippingThreshold = 5000;
-  const shipping = subtotal >= shippingThreshold || subtotal === 0 ? 0 : 150;
-  const total = subtotal + shipping;
+  const shipping = subtotalAfterDiscount >= shippingThreshold || subtotalAfterDiscount === 0 ? 0 : 150;
+  const total = subtotalAfterDiscount + shipping;
 
   // 1. PAYMENT SUCCESS OVERLAY
   if (paymentSuccess && placedOrder) {
@@ -688,20 +729,27 @@ function Cart() {
 
               {/* Line items list */}
               <div className="space-y-4 text-xs font-semibold text-gray-600 dark:text-gray-300">
-                <div className="flex justify-between">
-                  <span className="font-normal text-gray-400 dark:text-gray-500">Cart Subtotal</span>
+                <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                  <span>Cart Subtotal</span>
                   <span className="text-gray-900 dark:text-white">₹{subtotal.toLocaleString()}</span>
                 </div>
+
+                {appliedCoupon && (
+                  <div className="flex justify-between font-bold text-pink-600 dark:text-pink-400">
+                    <span>Coupon Discount ({appliedCoupon.code})</span>
+                    <span>-₹{discountAmount.toLocaleString()} ({appliedCoupon.discountPercentage}%)</span>
+                  </div>
+                )}
                 
-                <div className="flex justify-between">
-                  <span className="font-normal text-gray-400 dark:text-gray-500">GST (18% estimated)</span>
+                <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                  <span>GST (18% estimated)</span>
                   <span className="text-gray-900 dark:text-white">₹{tax.toLocaleString()}</span>
                 </div>
 
-                <div className="flex justify-between">
-                  <span className="font-normal text-gray-400 dark:text-gray-500">Secure Courier Shipping</span>
+                <div className="flex justify-between font-normal text-gray-400 dark:text-gray-500">
+                  <span>Secure Courier Shipping</span>
                   {shipping === 0 ? (
-                    <span className="text-emerald-600 dark:text-emerald-450 font-bold uppercase tracking-wider text-[10px]">Free Shipping</span>
+                    <span className="text-emerald-650 font-bold uppercase tracking-wider text-[10px]">Free Shipping</span>
                   ) : (
                     <span className="text-gray-900 dark:text-white">₹{shipping.toLocaleString()}</span>
                   )}
@@ -711,7 +759,7 @@ function Cart() {
                   <div className="bg-pink-50/50 dark:bg-pink-950/10 border border-pink-100/50 dark:border-pink-900/30 rounded-xl p-3 text-[10px] text-pink-700 dark:text-pink-400 leading-normal font-normal flex items-start gap-2">
                     <Truck size={14} className="shrink-0 mt-0.5 text-pink-650 dark:text-pink-400" />
                     <span>
-                      Add <strong>₹{(shippingThreshold - subtotal).toLocaleString()}</strong> more to your order to unlock <strong>Free Shipping</strong>!
+                      Add <strong>₹{(shippingThreshold - subtotalAfterDiscount).toLocaleString()}</strong> more to your order to unlock <strong>Free Shipping</strong>!
                     </span>
                   </div>
                 )}
@@ -720,9 +768,47 @@ function Cart() {
                   <span className="text-sm font-bold text-gray-900 dark:text-white">Total Cost</span>
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-extrabold text-gray-950 dark:text-white">₹{total.toLocaleString()}</span>
-                    <span className="text-[10px] text-pink-600 dark:text-pink-400">INR</span>
+                    <span className="text-[10px] text-pink-650 dark:text-pink-400">INR</span>
                   </div>
                 </div>
+              </div>
+
+              {/* Coupon Code Input Block */}
+              <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 space-y-3 font-semibold">
+                <label className="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider block">Have a promo code?</label>
+                
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-100/30 rounded-xl px-4 py-2.5">
+                    <div className="text-xs">
+                      <span className="font-mono font-bold text-emerald-700 dark:text-emerald-455 uppercase">{appliedCoupon.code}</span>
+                      <span className="text-gray-400 dark:text-gray-500 font-normal ml-1.5">Applied</span>
+                    </div>
+                    <button 
+                      onClick={handleRemoveCoupon}
+                      className="text-red-500 hover:text-red-655 font-bold text-xs focus:outline-none"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="e.g. SAVE20"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      className="flex-grow bg-gray-50 dark:bg-gray-950 border border-gray-150 dark:border-gray-850 rounded-xl px-3 py-2 text-xs font-mono uppercase text-gray-850 dark:text-gray-200 focus:outline-none focus:border-pink-500 focus:bg-white transition-all font-bold"
+                    />
+                    <button
+                      type="submit"
+                      disabled={couponLoading}
+                      className="px-4 py-2 bg-gray-900 dark:bg-gray-800 hover:bg-gray-850 dark:hover:bg-gray-700 text-white font-bold text-xs rounded-xl shadow transition-all disabled:opacity-50 focus:outline-none"
+                    >
+                      {couponLoading ? "Applying..." : "Apply"}
+                    </button>
+                  </form>
+                )}
+                {couponError && <p className="text-[10px] text-red-500 font-bold mt-1">{couponError}</p>}
               </div>
 
               {/* Checkout CTA */}
