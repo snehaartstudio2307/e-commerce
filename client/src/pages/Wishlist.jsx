@@ -5,6 +5,7 @@ import { Heart, ShoppingCart, Trash2, ArrowRight, Sparkles, Star } from "lucide-
 import { addToCart } from "../redux/cartSlice";
 import api from "../services/api";
 import { toast } from "react-toastify";
+import { updateWishlistCache } from "../services/wishlist";
 
 function Wishlist() {
   const dispatch = useDispatch();
@@ -15,18 +16,17 @@ function Wishlist() {
 
   const fetchWishlist = useCallback(async () => {
     try {
-      await Promise.resolve();
       setLoading(true);
       if (userInfo) {
         // Logged-in: Fetch populated wishlist from backend
         const { data } = await api.get("/products/wishlist/me");
         setWishlistItems(data);
+        updateWishlistCache(data.map(item => item._id));
       } else {
-        // Guest: Read IDs from localStorage and fetch all products to filter
+        // Guest: Fetch wishlist IDs from localStorage
         const guestWishlistIds = localStorage.getItem("wishlist")
           ? JSON.parse(localStorage.getItem("wishlist"))
           : [];
-        
         if (guestWishlistIds.length === 0) {
           setWishlistItems([]);
         } else {
@@ -35,6 +35,7 @@ function Wishlist() {
           setWishlistItems(filtered);
         }
       }
+      window.dispatchEvent(new Event("wishlistUpdate"));
     } catch (err) {
       console.error("Error loading wishlist:", err);
       toast.error("Failed to load wishlist items.");
@@ -67,6 +68,7 @@ function Wishlist() {
         setWishlistItems((prev) => prev.filter((item) => item._id !== productId));
         toast.success("Removed from wishlist");
       }
+      window.dispatchEvent(new Event("wishlistUpdate"));
     } catch (err) {
       console.error("Error removing from wishlist:", err);
       toast.error("Failed to remove item.");

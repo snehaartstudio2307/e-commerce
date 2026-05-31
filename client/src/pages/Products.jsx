@@ -10,6 +10,7 @@ function Products() {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryFilter = searchParams.get("category");
+  const keywordFilter = searchParams.get("keyword");
 
   const { products } = useSelector(
     (state) => state.products
@@ -18,9 +19,11 @@ function Products() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const url = categoryFilter 
-          ? `/products?category=${encodeURIComponent(categoryFilter)}` 
-          : "/products";
+        const params = [];
+        if (categoryFilter) params.push(`category=${encodeURIComponent(categoryFilter)}`);
+        if (keywordFilter) params.push(`keyword=${encodeURIComponent(keywordFilter)}`);
+        
+        const url = params.length > 0 ? `/products?${params.join("&")}` : "/products";
         const { data } = await api.get(url);
         dispatch(setProducts(data));
       } catch (error) {
@@ -29,7 +32,7 @@ function Products() {
     };
 
     fetchProducts();
-  }, [dispatch, categoryFilter]);
+  }, [dispatch, categoryFilter, keywordFilter]);
 
   const categories = [
     "All",
@@ -51,6 +54,25 @@ function Products() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      {/* Active Search Filter Badge */}
+      {keywordFilter && (
+        <div className="flex items-center gap-2 mb-6">
+          <span className="text-xs bg-pink-50 dark:bg-pink-950/40 text-pink-600 dark:text-pink-400 border border-pink-100/30 px-3.5 py-1.5 rounded-full flex items-center gap-2 font-semibold">
+            Search query: "{keywordFilter}"
+            <button 
+              onClick={() => {
+                searchParams.delete("keyword");
+                setSearchParams(searchParams);
+              }}
+              className="text-pink-400 hover:text-pink-600 transition-colors font-bold text-xs ml-1"
+              title="Clear search query"
+            >
+              ✕
+            </button>
+          </span>
+        </div>
+      )}
+
       {/* Page Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 pb-6 border-b border-gray-100 dark:border-gray-800">
         <div>
@@ -58,7 +80,11 @@ function Products() {
             <Sparkles size={14} /> Studio Collections
           </span>
           <h1 className="text-3xl font-serif font-extrabold text-gray-900 dark:text-white">
-            {categoryFilter ? `${categoryFilter}` : "Our Full Art Collection"}
+            {keywordFilter 
+              ? `Results for "${keywordFilter}"` 
+              : categoryFilter 
+                ? `${categoryFilter}` 
+                : "Our Full Art Collection"}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
             Discover one-of-a-kind, hand-poured art pieces and preservation keepsakes.

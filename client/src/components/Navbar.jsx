@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTheme } from "../context/ThemeContext";
 import { logout } from "../redux/authSlice";
 import { toast } from "react-toastify";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { fetchWishlistCached } from "../services/wishlist";
 
 function Navbar() {
   const location = useLocation();
@@ -15,7 +16,51 @@ function Navbar() {
   const { theme, toggleTheme } = useTheme();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [prevSearch, setPrevSearch] = useState(location.search);
   const dropdownRef = useRef(null);
+
+  if (location.search !== prevSearch) {
+    setPrevSearch(location.search);
+    const params = new URLSearchParams(location.search);
+    setSearchQuery(params.get("keyword") || "");
+  }
+
+  const handleSearchSubmit = () => {
+    if (searchQuery.trim()) {
+      navigate(`/products?keyword=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      navigate("/products");
+    }
+  };
+
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  const updateWishlistCount = useCallback(async () => {
+    if (userInfo) {
+      try {
+        const ids = await fetchWishlistCached(userInfo);
+        setWishlistCount(ids.length);
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      const guestWishlist = localStorage.getItem("wishlist")
+        ? JSON.parse(localStorage.getItem("wishlist"))
+        : [];
+      setWishlistCount(guestWishlist.length);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    Promise.resolve().then(() => {
+      updateWishlistCount();
+    });
+    window.addEventListener("wishlistUpdate", updateWishlistCount);
+    return () => {
+      window.removeEventListener("wishlistUpdate", updateWishlistCount);
+    };
+  }, [updateWishlistCount]);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -52,11 +97,20 @@ function Navbar() {
           </Link>
 
           {/* Search bar placeholder (aesthetic) */}
-          <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-full w-72 focus-within:border-pink-300 dark:focus-within:border-pink-500 focus-within:bg-white dark:focus-within:bg-gray-950 transition-all">
-            <Search size={16} className="text-gray-400 dark:text-gray-500" />
+          <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gray-50 dark:bg-gray-950 border border-gray-100 dark:border-gray-800 rounded-full w-72 focus-within:border-pink-300 dark:focus-within:border-pink-500 focus-within:bg-white dark:focus-within:bg-gray-950 transition-all">
+            <button type="button" onClick={handleSearchSubmit} className="focus:outline-none">
+              <Search size={16} className="text-gray-400 dark:text-gray-500 hover:text-pink-500 transition-colors" />
+            </button>
             <input 
               type="text" 
               placeholder="Search collections..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSearchSubmit();
+                }
+              }}
               className="bg-transparent border-none text-xs text-gray-700 dark:text-gray-200 outline-none w-full placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
@@ -92,12 +146,17 @@ function Navbar() {
             {/* Wishlist Link */}
             <Link 
               to="/wishlist" 
-              className={`hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full ${
+              className={`relative hover:text-pink-600 dark:hover:text-pink-500 hover:scale-105 transition-all p-1.5 rounded-full ${
                 isActive("/wishlist") ? "text-pink-600 bg-pink-50 dark:bg-pink-950/40" : "hover:bg-gray-50 dark:hover:bg-gray-900"
               }`}
               title="Wishlist"
             >
               <Heart size={20} className={isActive("/wishlist") ? "fill-current" : ""} />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-pink-600 text-[10px] font-bold text-white shadow-sm ring-2 ring-white dark:ring-gray-950 animate-bounce">
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
 
             {/* Cart Link with Badge */}

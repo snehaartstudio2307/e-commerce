@@ -15,6 +15,7 @@ import {
 import { addToCart } from "../redux/cartSlice";
 import api from "../services/api";
 import { toast } from "react-toastify";
+import { updateWishlistCache } from "../services/wishlist";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -110,8 +111,11 @@ function ProductDetails() {
       // Authenticated user wishlist toggle on server
       try {
         const { data } = await api.post(`/products/${product._id}/wishlist`);
-        setIsWishlisted(data.wishlist.includes(product._id));
+        const updatedWishlist = data.wishlist || [];
+        updateWishlistCache(updatedWishlist);
+        setIsWishlisted(updatedWishlist.includes(product._id));
         toast.success(data.message);
+        window.dispatchEvent(new Event("wishlistUpdate"));
       } catch (err) {
         console.error("Error toggling server wishlist:", err);
         toast.error("Failed to update wishlist on server.");
@@ -134,6 +138,7 @@ function ProductDetails() {
       }
       localStorage.setItem("wishlist", JSON.stringify(guestWishlist));
       setWishlistLoading(false);
+      window.dispatchEvent(new Event("wishlistUpdate"));
     }
   };
 

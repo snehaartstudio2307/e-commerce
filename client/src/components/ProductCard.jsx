@@ -1,12 +1,95 @@
 import { Link } from "react-router-dom";
 import { Heart, Star, ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import api from "../services/api";
+import { fetchWishlistCached, updateWishlistCache } from "../services/wishlist";
 
 function ProductCard({ product }) {
+  const { userInfo } = useSelector((state) => state.auth);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    const checkWishlist = async () => {
+      if (userInfo) {
+        const ids = await fetchWishlistCached(userInfo);
+        if (active) {
+          setIsWishlisted(ids.includes(product._id));
+        }
+      } else {
+        const guestWishlist = localStorage.getItem("wishlist")
+          ? JSON.parse(localStorage.getItem("wishlist"))
+          : [];
+        if (active) {
+          setIsWishlisted(guestWishlist.includes(product._id));
+        }
+      }
+    };
+    checkWishlist();
+    return () => {
+      active = false;
+    };
+  }, [product._id, userInfo]);
+
+  const handleToggleWishlist = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (wishlistLoading) return;
+    setWishlistLoading(true);
+
+    if (userInfo) {
+      try {
+        const { data } = await api.post(`/products/${product._id}/wishlist`);
+        const updatedWishlist = data.wishlist || [];
+        updateWishlistCache(updatedWishlist);
+        setIsWishlisted(updatedWishlist.includes(product._id));
+        toast.success(data.message);
+        window.dispatchEvent(new Event("wishlistUpdate"));
+      } catch (err) {
+        console.error("Error toggling wishlist:", err);
+        toast.error("Failed to update wishlist.");
+      } finally {
+        setWishlistLoading(false);
+      }
+    } else {
+      let guestWishlist = localStorage.getItem("wishlist")
+        ? JSON.parse(localStorage.getItem("wishlist"))
+        : [];
+      if (guestWishlist.includes(product._id)) {
+        guestWishlist = guestWishlist.filter((x) => x !== product._id);
+        setIsWishlisted(false);
+        toast.success("Removed from wishlist");
+      } else {
+        guestWishlist.push(product._id);
+        setIsWishlisted(true);
+        toast.success("Added to wishlist");
+      }
+      localStorage.setItem("wishlist", JSON.stringify(guestWishlist));
+      setWishlistLoading(false);
+      window.dispatchEvent(new Event("wishlistUpdate"));
+    }
+  };
+
   return (
     <div className="group relative bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full">
       {/* Wishlist Button */}
-      <button className="absolute top-4 right-4 z-10 p-2.5 rounded-full bg-white/80 dark:bg-gray-950/80 border border-white/50 dark:border-gray-800/50 text-gray-400 dark:text-gray-500 hover:text-rose-500 hover:bg-white dark:hover:bg-gray-950 hover:scale-110 shadow-sm transition-all duration-300">
-        <Heart size={18} className="fill-none group-hover/btn:fill-rose-500" />
+      <button 
+        onClick={handleToggleWishlist}
+        disabled={wishlistLoading}
+        className={`absolute top-4 right-4 z-10 p-2.5 rounded-full bg-white/80 dark:bg-gray-950/80 border border-white/50 dark:border-gray-800/50 hover:scale-110 shadow-sm transition-all duration-300 ${
+          isWishlisted 
+            ? "text-rose-500 hover:bg-white dark:hover:bg-gray-950" 
+            : "text-gray-400 dark:text-gray-500 hover:text-rose-500 hover:bg-white dark:hover:bg-gray-950"
+        }`}
+        title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+      >
+        <Heart 
+          size={18} 
+          className={isWishlisted ? "fill-rose-500 text-rose-500" : "fill-none"} 
+        />
       </button>
 
       {/* Product Image */}
