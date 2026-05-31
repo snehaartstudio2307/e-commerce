@@ -14,6 +14,10 @@ function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    document.title = "My Wishlist | Sneha Art Studio";
+  }, []);
+
   const fetchWishlist = useCallback(async () => {
     try {
       setLoading(true);

@@ -17,6 +17,16 @@ function Products() {
   );
 
   useEffect(() => {
+    if (keywordFilter) {
+      document.title = `Search: "${keywordFilter}" | Sneha Art Studio`;
+    } else if (categoryFilter) {
+      document.title = `${categoryFilter} | Sneha Art Studio`;
+    } else {
+      document.title = "Shop Collections | Sneha Art Studio";
+    }
+  }, [categoryFilter, keywordFilter]);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const params = [];

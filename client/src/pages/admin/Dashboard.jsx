@@ -29,6 +29,10 @@ function Dashboard() {
 
   // States
   const [activeAdminTab, setActiveAdminTab] = useState("orders");
+
+  useEffect(() => {
+    document.title = "Admin Operations Dashboard | Sneha Art Studio";
+  }, []);
   const [stats, setStats] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);

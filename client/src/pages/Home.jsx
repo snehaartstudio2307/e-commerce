@@ -22,6 +22,10 @@ import { toast } from "react-toastify";
 function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = "Sneha Art Studio | Handcrafted Resin & Canvas Art";
+  }, []);
   const [homeConfig, setHomeConfig] = useState({
     heroTitle: "Exquisite Resin & Canvas Creations, Crafted to Elevate Your Spaces.",
     heroSubtitle: "From glass-like geode wall clocks and gilded crystal coasters to preserving your most precious wedding flowers in crystal-clear resin blocks, every creation is hand-poured with love and premium pigments.",

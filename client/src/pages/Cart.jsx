@@ -93,6 +93,10 @@ function Cart() {
     }
   }, [isCheckoutStep, fetchSavedAddresses]);
 
+  useEffect(() => {
+    document.title = isCheckoutStep ? "Checkout | Sneha Art Studio" : "Shopping Cart | Sneha Art Studio";
+  }, [isCheckoutStep]);
+
   const handleSelectSavedAddress = (addr) => {
     setSelectedAddressId(addr._id);
     setShippingAddress({

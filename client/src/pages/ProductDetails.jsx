@@ -57,6 +57,14 @@ function ProductDetails() {
     });
   }, [fetchProduct]);
 
+  useEffect(() => {
+    if (product) {
+      document.title = `${product.title} | Sneha Art Studio`;
+    } else {
+      document.title = "Product Details | Sneha Art Studio";
+    }
+  }, [product]);
+
   // Check wishlist state
   useEffect(() => {
     let active = true;

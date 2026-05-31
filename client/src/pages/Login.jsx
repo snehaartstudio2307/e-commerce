@@ -24,6 +24,10 @@ function Login() {
   // Redirect source path if any, or default to home
   const redirectPath = new URLSearchParams(location.search).get("redirect") || "/";
 
+  useEffect(() => {
+    document.title = isLogin ? "Account Login | Sneha Art Studio" : "Create Account | Sneha Art Studio";
+  }, [isLogin]);
+
   // Redirect if already logged in
   useEffect(() => {
     if (userInfo) {

@@ -31,6 +31,10 @@ function Profile() {
 
   // Profile Data & App State
   const [activeTab, setActiveTab] = useState("orders");
+
+  useEffect(() => {
+    document.title = "My Profile & Orders | Sneha Art Studio";
+  }, []);
   
   // Profile settings states
   const [profileForm, setProfileForm] = useState({
